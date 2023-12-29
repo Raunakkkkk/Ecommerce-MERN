@@ -7,7 +7,7 @@ import authRoutes from './routes/auth.js'
 import cors from 'cors'
 import categoryRoute from './routes/categoryRoutes.js'
 import productRoutes from './routes/productRoutes.js'
-import path from 'path';
+// import path from 'path';
 //config env
 dotenv.config();
 
@@ -22,7 +22,7 @@ app.use(cors());
 //ye cros origin error bachane ke liye
 app.use(express.json());
 app.use(morgan("dev"));//ye req batata hai console pr
-app.use(express.static(path.join(__dirname,'./client/build')))
+// app.use(express.static(path.join(__dirname,'./client/build')))
 
 
 
@@ -33,12 +33,12 @@ app.use("/api/v1/product", productRoutes);
 
 
 //rest api
-// app.get("/", (req, res) => {
-//   res.send("<h1>Welcome to Ecommerce APP</h1>");
-// });
-app.use('*',function(req,res){
-res.sendFile(path.join(__dirname,'./client/build/index.html'))
-})
+app.get("/", (req, res) => {
+  res.send("<h1>Welcome to Ecommerce APP</h1>");
+});
+// app.use('*',function(req,res){
+// res.sendFile(path.join(__dirname,'./client/build/index.html'))
+// })
 
 
 const PORT = process.env.PORT || 8080;
