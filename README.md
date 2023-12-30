@@ -1,20 +1,9 @@
 # beta version avalible on
 https://dulcet-lokum-0e2e6a.netlify.app/
 
-# E-commerce Platform
+# MERN-Stack E-commerce Project
 
-An E-commerce platform built on the MERN (MongoDB, Express.js, React.js, Node.js) stack. It includes user authentication, cart functionality, search with category filters, an admin panel for product and category management, and global state management using Context API.
-
-## Table of Contents
-
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Getting Started](#getting-started)
-- [Admin Panel Usage](#admin-panel-usage)
-- [Deployment](#deployment)
-- [Contributing](#contributing)
-- [License](#license)
-- [Acknowledgements](#acknowledgements)
+This comprehensive E-commerce project, developed using the MERN (MongoDB, Express.js, React.js, Node.js) stack, offers user authentication, a shopping cart, search functionality with category filters, an admin panel for product and category management, and global state management through Context API.
 
 ## Features
 
@@ -24,14 +13,28 @@ An E-commerce platform built on the MERN (MongoDB, Express.js, React.js, Node.js
 - **Admin Panel:** Secure access for administrators to manage products and categories via CRUD operations.
 - **Global State Management:** Utilize Context API for efficient global state management.
 - **Third-Party Libraries:**
-  - Axios: Utilized for making HTTP requests to the backend.
-  - React-Toast: Display informative messages or notifications to users.
-  - Context API: Manage global states efficiently.
+  - **Axios:** Utilized for making HTTP requests to the backend.
+  - **React-Toast:** Display informative messages or notifications to users.
+  - **Context API:** Manage global states efficiently.
 
 ## Tech Stack
 
-- **Frontend:** React.js, Context API, Axios, React-Toast, deployed on Netlify.
-- **Backend:** Node.js, Express.js, MongoDB (Mongoose) for data storage.
+### Frontend
+
+- **React.js**
+- **Context API**
+- **Axios**
+- **React-Toast**
+- **react-router-dom**
+- **web-vitals**
+
+_Deployed on Netlify._
+
+### Backend
+
+- **Node.js**
+- **Express.js**
+- **MongoDB (Mongoose)**
 
 ## Getting Started
 
@@ -46,21 +49,24 @@ An E-commerce platform built on the MERN (MongoDB, Express.js, React.js, Node.js
 
 ## Admin Panel Usage
 
-- **Managing Products and Categories:**
-  - Use the admin panel to add, edit, or delete products and categories.
-
-## Deployment
-
-The frontend is deployed on [Netlify](https://www.netlify.com/) at `<frontend-deployment-url>`. Please check the live application [here](<frontend-deployment-url>).
+- **Managing Products:**
+  - Use the admin panel to add, edit, or delete products.
+- **Managing Categories:**
+  - Admins can perform CRUD operations on product categories.
 
 ## Contributing
 
 Contributions are welcome! If you'd like to contribute or report issues, please open an issue or submit a pull request.
 
+## Deployment
+
+The frontend is deployed on Netlify at `<frontend-deployment-url>`. Please check the live application [here](<frontend-deployment-url>).
+
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the MIT License.
 
 ## Acknowledgements
 
-- Mention any libraries, tutorials, or resources you used.
+Mention any libraries, tutorials, or resources you used.
+
