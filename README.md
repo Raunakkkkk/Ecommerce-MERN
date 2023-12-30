@@ -1,2 +1,2 @@
 # beta version avalible on
-https://steady-baklava-fa832a.netlify.app/
+https://dulcet-lokum-0e2e6a.netlify.app/
