@@ -17,6 +17,15 @@ This comprehensive E-commerce project, developed using the MERN (MongoDB, Expres
   - **React-Toast:** Display informative messages or notifications to users.
   - **Context API:** Manage global states efficiently.
 
+
+## Admin Panel Usage
+
+- **Managing Products:**
+  - Use the admin panel to add, edit, or delete products.
+- **Managing Categories:**
+  - Admins can perform CRUD operations on product categories.
+ 
+  
 ## Tech Stack
 
 ### Frontend
@@ -35,6 +44,8 @@ _Deployed on Netlify._
 - **Node.js**
 - **Express.js**
 - **MongoDB (Mongoose)**
+- Deployed on Render
+
 
 ## Getting Started
 
@@ -47,26 +58,4 @@ _Deployed on Netlify._
    - Frontend: `npm start` in the `frontend` directory
    - Backend: `npm start` in the `backend` directory
 
-## Admin Panel Usage
-
-- **Managing Products:**
-  - Use the admin panel to add, edit, or delete products.
-- **Managing Categories:**
-  - Admins can perform CRUD operations on product categories.
-
-## Contributing
-
-Contributions are welcome! If you'd like to contribute or report issues, please open an issue or submit a pull request.
-
-## Deployment
-
-The frontend is deployed on Netlify at `<frontend-deployment-url>`. Please check the live application [here](<frontend-deployment-url>).
-
-## License
-
-This project is licensed under the MIT License.
-
-## Acknowledgements
-
-Mention any libraries, tutorials, or resources you used.
 
