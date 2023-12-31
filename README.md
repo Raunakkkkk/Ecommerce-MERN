@@ -44,7 +44,8 @@ _Deployed on Netlify._
 - **Node.js**
 - **Express.js**
 - **MongoDB (Mongoose)**
-- Deployed on Render
+
+_Deployed on Render._
 
 
 ## Getting Started
