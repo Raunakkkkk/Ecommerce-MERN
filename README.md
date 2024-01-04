@@ -1,6 +1,4 @@
-# beta version avalible on
-https://dulcet-lokum-0e2e6a.netlify.app/
-
+# Check it out on https://e-commerce-7849.netlify.app/
 # MERN-Stack E-commerce Project
 
 This comprehensive E-commerce project, developed using the MERN (MongoDB, Express.js, React.js, Node.js) stack, offers user authentication, a shopping cart, search functionality with category filters, an admin panel for product and category management, and global state management through Context API.
