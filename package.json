@@ -6,7 +6,6 @@
   "type": "module",
   "scripts": {
     "start": "node server.js",
-    "build":"npm install",
     "server": "nodemon server.js",
     "client": "npm start --prefix ./client",
     "dev": "concurrently \"npm run server\" \"npm run client\""
@@ -16,6 +15,7 @@
   "license": "MIT",
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "braintree": "^3.24.0",
     "colors": "^1.4.0",
     "concurrently": "^8.2.2",
     "cors": "^2.8.5",

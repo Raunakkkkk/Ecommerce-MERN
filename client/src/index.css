@@ -1,0 +1,364 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* font-family: 'Poppins', sans-serif; */
+/* font-family: 'Playfair Display', serif; */
+
+/* //navbar css */
+.navbar {
+  font-family: "Poppins", sans-serif;
+  font-size: 17px;
+  line-height: 26px;
+  text-transform: uppercase;
+  box-shadow: 0 8px 6px -6px gray;
+  --webkit-box-shadow: 0 8px 6px -6px gray;
+  border-bottom: solid gray !important;
+}
+
+.nav-link {
+  font-weight: 300 !important;
+}
+
+.active {
+  border-bottom: 2px solid black;
+}
+
+.navbar-brand {
+  font-weight: 700;
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  letter-spacing: 3px;
+  font-size: xx-large;
+}
+/* =============================
+==========footer============= */
+
+.footer {
+  color: white;
+  padding: 25px;
+  background: #000000; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to right,
+    #434343,
+    #000000
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to bottom, #323232 0%, #3F3F3F 40%, #1C1C1C 150%), linear-gradient(to top, rgba(255,255,255,0.40) 0%, rgba(0,0,0,0.25) 200%);
+  background-blend-mode: multiply;}
+
+.footer a {
+  text-decoration: none;
+  color: white;
+  padding: 10px;
+}
+
+.footer a:hover {
+  color: #ffefba;
+  border-bottom: 1px solid #ffefba;
+}
+/* =================================
+======== page not found css ======= */
+.pnf {
+  display: flex;
+  min-height: 65vh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.pnf-title {
+  font-size: 100px;
+  font-weight: 700;
+}
+
+.pnf-heading {
+  font-weight: normal;
+}
+
+.pnf-btn {
+  color: black;
+  border: 1px solid black;
+  text-decoration: none;
+  padding: 10px;
+  margin-top: 10px;
+}
+.pnf-btn:hover {
+  background-color: black;
+  color: white;
+}
+/* ========================================= */
+/* =========contact us ========= */
+.contactus {
+  margin: 0;
+  padding: 0;
+  height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* reguster */
+.register{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 70vh;
+  flex-direction: column;
+}
+
+
+.product-link{
+  text-decoration: none !important;
+  color: black;
+}
+.cat-btn {
+  padding: 40px 0px;
+  font-size: 24px;
+  text-transform: uppercase;
+}
+.cat-btn:hover {
+  background-color: #434343;
+  color: white;
+}
+/* ================
+====dashboard
+=================== */
+
+.dashboard {
+  margin-top: 100px !important;
+}
+
+.dashboard-menu h4 {
+  background-color: #434343 !important;
+  color: white;
+  padding: 20px 0px;
+}
+
+
+
+
+/* orders page */
+/* Orders page styles */
+.orders-container {
+  padding: 3rem;
+  margin: 3rem;
+}
+
+.dashboard {
+  display: flex;
+  flex-direction: column;
+}
+
+.order-card {
+  margin-bottom: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
+}
+
+.order-table {
+  margin-bottom: 1rem;
+}
+
+.order-products {
+  padding: 1rem;
+}
+
+.order-product {
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center; /* Center items vertically */
+}
+
+.order-product-img {
+  max-width: 100%;
+  height: auto;
+  margin-right: 1rem; /* Space between image and content */
+}
+
+.order-product-content {
+  padding: 1rem;
+  flex: 1; /* Allow content to fill available space */
+}
+
+@media (max-width: 768px) {
+  .order-product {
+    flex-direction: row; /* Keep items in the same row */
+    flex-wrap: wrap; /* Allow wrapping if needed */
+  }
+
+  .order-product-img {
+    width: 50%; /* Adjust width as needed */
+    margin-right: 1rem; /* Space between image and content */
+  }
+
+  .order-product-content {
+    width: 50%; /* Adjust width as needed */
+    text-align: left; /* Align text to the left */
+  }
+}
+
+
+/* admin dashboard */
+.admin-dashboard{
+  display: flex;
+  flex-direction: row;
+  margin-top: 100px !important;
+
+}
+/* Admin dashboard page styles */
+.admin-dashboard {
+  padding: 1rem;
+}
+
+.admin-dashboard-menu {
+  padding-right: 1rem; /* Ensure some spacing between the menu and products */
+}
+
+.admin-dashboard-products {
+  padding-left: 1rem; /* Ensure some spacing between the menu and products */
+}
+
+.admin-dashboard-title {
+  margin-bottom: 2rem;
+}
+
+.admin-dashboard-products {
+  display: flex;
+  flex-wrap: wrap; /* Allows cards to wrap to the next line if necessary */
+  justify-content: space-between; /* Distributes space between cards */
+}
+
+.product-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.admin-dashboard-card {
+  width: 18rem; /* Fixed width for all cards */
+  height: 100%; /* Ensures the card takes full height of its container */
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
+  overflow: hidden; /* Ensures no content spills outside the card */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.admin-dashboard-card-img {
+  width: 100%;
+  height: 12rem; /* Fixed height for the image */
+  object-fit: cover; /* Ensures image covers the area without distortion */
+}
+
+.admin-dashboard-card-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 1rem;
+  text-align: center; /* Centers text within the card body */
+}
+
+.admin-dashboard-card-title {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.admin-dashboard-card-text {
+  font-size: 1rem;
+  color: #333; /* Slightly darker text color for better readability */
+}
+
+@media (max-width: 768px) {
+  .admin-dashboard-card {
+    width: 18rem; /* Full width on small screens */
+    height: auto; /* Adjust height to content */
+  }
+
+  .admin-dashboard-card-img {
+    height: 10rem; /* Adjust height for smaller screens */
+  }
+}
+
+
+/* admin-update-product */
+.admin-update-product{
+  margin-top: 100px !important;
+
+}
+
+/* all orders
+ */
+ /* Admin Orders Page Styles */
+.admin-all-orders-dashboard {
+  display: flex;
+  flex-direction: row;
+  margin-top: 100px !important;
+  padding: 1rem;
+
+}
+
+.admin-all-orders .card {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
+}
+
+.admin-all-orders .card img {
+  max-width: 60%;
+  height: auto;
+}
+
+.admin-all-orders .card-body {
+  flex: 1;
+  padding: 1rem;
+}
+
+.admin-all-orders .card-header {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.admin-all-orders .table {
+  margin-bottom: 1rem;
+}
+
+.admin-all-orders .container {
+  padding: 1rem;
+}
+
+.admin-all-orders .row {
+  margin-bottom: 1rem;
+}
+
+.admin-all-orders .card.flex-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .admin-all-orders .card.flex-row {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .admin-all-orders .card img {
+    margin-bottom: 1rem;
+    max-width: 50%;
+  }
+
+  .admin-all-orders .card-body {
+    text-align: center;
+  }
+}

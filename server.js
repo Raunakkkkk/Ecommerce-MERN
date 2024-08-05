@@ -32,7 +32,7 @@ app.use('/api/v1/category',categoryRoute);
 app.use("/api/v1/product", productRoutes);
 
 
-//rest api
+// rest api
 app.get("/", (req, res) => {
   res.send("<h1>Welcome to Ecommerce APP</h1>");
 });

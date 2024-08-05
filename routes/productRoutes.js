@@ -1,5 +1,7 @@
 import express from "express";
 import {
+  braintreePaymentController,
+  braintreeTokenController,
   createProductController,
   deleteProductController,
   getProductController,
@@ -49,4 +51,13 @@ router.post('/product-filters',productFiltersController)//as humko argument bhi 
 //search product
 router.get("/search/:keyword", searchProductController);
 
+
+//payment route
+//tokens
+router.get('/braintree/token',braintreeTokenController)
+
+//payments
+router.post('/braintree/payment',requireSignIn,braintreePaymentController);
+
 export default router;
+
