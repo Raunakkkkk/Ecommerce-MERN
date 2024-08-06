@@ -1,4 +1,4 @@
-**Instamart - MERN-Stack E-commerce Project**
+# Instamart - MERN-Stack E-commerce Project**
 
 This comprehensive E-commerce project, developed using the MERN (MongoDB, Express.js, React.js, Node.js) stack, features robust functionalities for both users and administrators.
 
