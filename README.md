@@ -1,28 +1,31 @@
 # Check it out on https://e-commerce-7849.netlify.app/
-# MERN-Stack E-commerce Project
+Got it! Here’s the updated project description with the name "Instamart":
 
-This comprehensive E-commerce project, developed using the MERN (MongoDB, Express.js, React.js, Node.js) stack, offers user authentication, a shopping cart, search functionality with category filters, an admin panel for product and category management, and global state management through Context API.
+---
 
-## Features
+**Instamart - MERN-Stack E-commerce Project**
 
+This comprehensive E-commerce project, developed using the MERN (MongoDB, Express.js, React.js, Node.js) stack, features robust functionalities for both users and administrators.
+
+**Features:**
 - **User Authentication:** Secure user registration, login, and password reset functionalities.
-- **Cart Functionality:** Enable users to manage their shopping cart by adding/removing items.
-- **Search with Category Filters:** Allow users to search and filter products by categories.
-- **Admin Panel:** Secure access for administrators to manage products and categories via CRUD operations.
+- **Cart Functionality:** Users can manage their shopping cart by adding or removing items.
+- **Search with Category Filters:** Users can search and filter products by categories.
+- **Admin Panel:** Administrators can manage products and categories via CRUD operations, view and manage orders, and track order status (Processing, Processed, Cancelled). Admins can also view detailed information about which user placed which order and approve or modify order statuses.
+- **PayPal Integration:** Secure payment processing through PayPal for a seamless checkout experience.
 - **Global State Management:** Utilize Context API for efficient global state management.
+
+**Admin Panel Usage:**
+- **Managing Products:** Add, edit, or delete products.
+- **Managing Categories:** Perform CRUD operations on product categories.
+- **Order Management:** View, process, and manage orders, including updating their status and viewing order details.
+
 - **Third-Party Libraries:**
-  - **Axios:** Utilized for making HTTP requests to the backend.
-  - **React-Toast:** Display informative messages or notifications to users.
-  - **Context API:** Manage global states efficiently.
+- **Axios:** For making HTTP requests to the backend.
+- **React-Toast:** To display informative messages or notifications to users.
+- **Context API:** For managing global states efficiently.
 
-
-## Admin Panel Usage
-
-- **Managing Products:**
-  - Use the admin panel to add, edit, or delete products.
-- **Managing Categories:**
-  - Admins can perform CRUD operations on product categories.
- 
+---
   
 ## Tech Stack
 
