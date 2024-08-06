@@ -1,8 +1,3 @@
-# Check it out on https://e-commerce-7849.netlify.app/
-Got it! Here’s the updated project description with the name "Instamart":
-
----
-
 **Instamart - MERN-Stack E-commerce Project**
 
 This comprehensive E-commerce project, developed using the MERN (MongoDB, Express.js, React.js, Node.js) stack, features robust functionalities for both users and administrators.
