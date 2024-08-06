@@ -15,7 +15,7 @@ This comprehensive E-commerce project, developed using the MERN (MongoDB, Expres
 - **Managing Categories:** Perform CRUD operations on product categories.
 - **Order Management:** View, process, and manage orders, including updating their status and viewing order details.
 
-- **Third-Party Libraries:**
+ **Third-Party Libraries:**
 - **Axios:** For making HTTP requests to the backend.
 - **React-Toast:** To display informative messages or notifications to users.
 - **Context API:** For managing global states efficiently.
