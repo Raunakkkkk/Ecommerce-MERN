@@ -11,7 +11,9 @@ const Orders = () => {
 
   const getOrders = async () => {
     try {
-      const { data } = await axios.get("/api/v1/auth/orders");
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_API_ENDPOINT}/api/v1/auth/orders`
+      );
       setOrders(data);
     } catch (error) {
       console.log(error);
@@ -49,7 +51,7 @@ const Orders = () => {
                       <td>{i + 1}</td>
                       <td>{o?.status}</td>
                       <td>{o?.buyer?.name}</td>
-                      <td>{moment(o?.createAt).fromNow()}</td>
+                      <td>{moment(o?.createdAt).fromNow()}</td>
                       <td>{o?.payment.success ? "Success" : "Failed"}</td>
                       <td>{o?.products?.length}</td>
                     </tr>
@@ -57,10 +59,13 @@ const Orders = () => {
                 </table>
                 <div className="order-products container">
                   {o?.products?.map((p) => (
-                    <div className="order-product row mb-2 p-3 card flex-row" key={p._id}>
+                    <div
+                      className="order-product row mb-2 p-3 card flex-row"
+                      key={p._id}
+                    >
                       <div className="col-md-4">
                         <img
-                          src={`/api/v1/product/product-photo/${p._id}`}
+                          src={`${process.env.REACT_APP_API_ENDPOINT}/api/v1/product/product-photo/${p._id}`}
                           className="order-product-img card-img-top"
                           alt={p.name}
                         />

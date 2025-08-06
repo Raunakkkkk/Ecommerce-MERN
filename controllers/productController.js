@@ -6,7 +6,7 @@ import orderModel from "../models/orderModel.js";
 import dotenv from "dotenv";
 dotenv.config();
 
-// console.log(process.env.PORT)
+console.log(process.env.PORT);
 //payment gateway
 
 var gateway = new braintree.BraintreeGateway({
@@ -142,13 +142,14 @@ export const deleteProductController = async (req, res) => {
   }
 };
 
-//upate producta
+//update product
 export const updateProductController = async (req, res) => {
   try {
     const { name, description, price, category, quantity, shipping } =
       req.fields;
     const { photo } = req.files;
-    //alidation
+
+    //validation
     switch (true) {
       case !name:
         return res.status(500).send({ error: "Name is Required" });
@@ -161,21 +162,25 @@ export const updateProductController = async (req, res) => {
       case !quantity:
         return res.status(500).send({ error: "Quantity is Required" });
       case photo && photo.size > 1000000:
-        return res
-          .status(500)
-          .send({ error: "photo is Required and should be less then 1mb" });
+        return res.status(500).send({ error: "Photo should be less than 1mb" });
     }
 
     const products = await productModel.findByIdAndUpdate(
       req.params.pid,
-      { ...req.fields, slug: slugify(name) },
+      {
+        ...req.fields,
+        slug: slugify(name),
+        shipping: shipping === "true" || shipping === true, // Ensure shipping is boolean
+      },
       { new: true }
     );
+
     if (photo) {
       products.photo.data = fs.readFileSync(photo.path);
       products.photo.contentType = photo.type;
     }
     await products.save();
+
     res.status(201).send({
       success: true,
       message: "Product Updated Successfully",
@@ -186,19 +191,20 @@ export const updateProductController = async (req, res) => {
     res.status(500).send({
       success: false,
       error,
-      message: "Error in Updte product",
+      message: "Error in Update product",
     });
   }
 };
+
 //filters
 export const productFiltersController = async (req, res) => {
   try {
-    const { checked, radio } = req.body;//ye frontend se ara
+    const { checked, radio } = req.body; //ye frontend se ara
     let args = {};
     if (checked.length > 0) args.category = checked;
     //$gte is a query in mongodb
     if (radio.length) args.price = { $gte: radio[0], $lte: radio[1] };
-    const products = await productModel.find(args);//query  hejdi db mai
+    const products = await productModel.find(args); //query  hejdi db mai
     res.status(200).send({
       success: true,
       products,
@@ -212,7 +218,6 @@ export const productFiltersController = async (req, res) => {
     });
   }
 };
-
 
 //search product
 export const searchProductController = async (req, res) => {
@@ -239,55 +244,50 @@ export const searchProductController = async (req, res) => {
 
 //payment gateway api
 //token
-export const braintreeTokenController=async(req,res)=>{
+export const braintreeTokenController = async (req, res) => {
   try {
-    gateway.clientToken.generate({},function(err,response){
-      if(err){
-        res.status(500).send(err)
-
+    gateway.clientToken.generate({}, function (err, response) {
+      if (err) {
+        res.status(500).send(err);
+      } else {
+        res.send(response);
       }
-      else{
-        res.send(response)
-      }
-    })
-
+    });
   } catch (error) {
     console.log(error);
-    
   }
-
-}
+};
 
 //payment
-export const braintreePaymentController=async(req,res)=>{
+export const braintreePaymentController = async (req, res) => {
   try {
-    const {cart,nonce}=req.body
-    let total=0
-    cart.map((i)=> {total+=i.price});
-    let newTransaction=gateway.transaction.sale({
-      amount:total,
-      paymentMethodNonce:nonce,
-      options:{
-        submitForSettlement:true
+    const { cart, nonce } = req.body;
+    let total = 0;
+    cart.map((i) => {
+      total += i.price;
+    });
+    let newTransaction = gateway.transaction.sale(
+      {
+        amount: total,
+        paymentMethodNonce: nonce,
+        options: {
+          submitForSettlement: true,
+        },
+      },
+      function (err, result) {
+        if (result) {
+          const order = new orderModel({
+            products: cart,
+            payment: result,
+            buyer: req.user._id,
+          }).save();
+          res.json({ ok: true });
+        } else {
+          res.status(500).send(err);
+        }
       }
-
-    },
-  function(err,result){
-    if(result){
-      const order=new orderModel({
-        products:cart,
-        payment: result,
-        buyer:req.user._id
-      }).save()
-      res.json({ok:true})
-    }else{
-      res.status(500).send(err)
-    }
-  }
-  )
-
+    );
   } catch (error) {
-    console.log(err)
+    console.log(err);
   }
-
-}
+};

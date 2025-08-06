@@ -11,7 +11,7 @@ const SearchInput = () => {
     // e.target.value="";
     try {
       const { data } = await axios.get(
-        `/api/v1/product/search/${values.keyword}`
+        `${process.env.REACT_APP_API_ENDPOINT}/api/v1/product/search/${values.keyword}`
       );
       setValues({ ...values, results: data });
       // setValues({ ...values, keyword: "" });

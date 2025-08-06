@@ -24,22 +24,8 @@ const CartPage = () => {
       return item;
     });
 
-    const groupedCart = updatedCart.reduce((accumulator, current) => {
-      const itemInAccumulator = accumulator.find(
-        (item) => item._id === current._id
-      );
-
-      if (itemInAccumulator) {
-        itemInAccumulator.quantity += current.quantity;
-      } else {
-        accumulator.push(current);
-      }
-
-      return accumulator;
-    }, []);
-
-    setCart(groupedCart);
-    localStorage.setItem("cart", JSON.stringify(groupedCart));
+    setCart(updatedCart);
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
 
   const removeCartItem = (pid) => {
@@ -69,203 +55,277 @@ const CartPage = () => {
     }
   };
 
-  //get payment gateway token
+  const clearCart = () => {
+    setCart([]);
+    localStorage.removeItem("cart");
+  };
+
   const getToken = async () => {
     try {
-      const { data } = await axios.get("/api/v1/product/braintree/token");
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_API_ENDPOINT}/api/v1/product/braintree/token`
+      );
       setClientToken(data?.clientToken);
-      // console.log("Client Token:", data?.clientToken);
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    getToken();
+    // Fetch the client token for Braintree DropIn
+    const fetchClientToken = async () => {
+      try {
+        const { data } = await axios.get(
+          `${process.env.REACT_APP_API_ENDPOINT}/api/v1/product/braintree/token`
+        );
+        setClientToken(data?.clientToken);
+      } catch (error) {
+        console.error("Failed to fetch client token:", error);
+        toast.error("Unable to initialize payment. Please try again later.");
+      }
+    };
+
+    if (auth?.token) {
+      fetchClientToken();
+    }
   }, [auth?.token]);
 
-  //handle payments
   const handlePayment = async () => {
+    if (!instance) {
+      toast.error("Payment instance not initialized. Please try again.");
+      return;
+    }
+
     try {
       setLoading(true);
-      const { nonce } = await instance.requestPaymentMethod();
-      const { data } = await axios.post("/api/v1/product/braintree/payment", {
-        nonce,
-        cart,
-      });
+      const { nonce } = await instance.requestPaymentMethod(); // Get the payment method nonce
+      const { data } = await axios.post(
+        `${process.env.REACT_APP_API_ENDPOINT}/api/v1/product/braintree/payment`,
+        {
+          nonce,
+          cart,
+        }
+      );
+
+      // Handle successful payment
       setLoading(false);
       localStorage.removeItem("cart");
       setCart([]);
       navigate("/dashboard/user/orders");
-      toast.success("Payment Completed Successfully ");
+      toast.success("Payment Completed Successfully");
     } catch (error) {
-      console.log(error);
+      console.error("Payment failed:", error);
       setLoading(false);
+      toast.error("Payment failed. Please try again.");
     }
   };
 
   return (
     <Layout>
-      <div className="cart-page">
-        <div className="row">
-          <div className="col-md-12">
-            <h1 className="text-center bg-light p-2 mb-1">
-              {!auth?.user
-                ? "Hello Guest"
-                : `Hello  ${auth?.token && auth?.user?.name}`}
-            </h1>
-            <h4 className="text-center">
-              {cart?.length
-                ? `You Have ${cart.length} items in your cart ${
-                    auth?.token ? "" : "please login to checkout"
-                  }`
-                : " Your Cart Is Empty"}
-            </h4>
-          </div>
+      <div className="cart-container">
+        <div className="cart-header">
+          {cart?.length ? (
+            <div className="cart-header-content">
+              <div className="cart-title">
+                <h1>Shopping Cart</h1>
+                <p className="cart-subtitle">
+                  You have {cart.length} item{cart.length > 1 ? "s" : ""} in
+                  your cart
+                </p>
+              </div>
+              <div className="cart-actions">
+                <button className="btn-clear" onClick={clearCart}>
+                  <i className="fas fa-trash"></i>
+                  Clear Cart
+                </button>
+                <button className="btn-continue" onClick={() => navigate("/")}>
+                  <i className="fas fa-shopping-bag"></i>
+                  Continue Shopping
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="cart-empty">
+              <div className="empty-icon">
+                <i className="fas fa-shopping-cart"></i>
+              </div>
+              <h2>Your Cart is Empty</h2>
+              <p>Looks like you haven't added any items to your cart yet.</p>
+              <button className="btn-shop-now" onClick={() => navigate("/")}>
+                <i className="fas fa-shopping-bag"></i>
+                Start Shopping
+              </button>
+            </div>
+          )}
         </div>
-        <div className="container">
-          <div className="row">
-            <div className="col-md-7 p-0 m-0">
+
+        {cart?.length > 0 && (
+          <div className="cart-content">
+            <div className="cart-items">
               {cart?.map((p) => (
-                <div className="row card flex-row" key={p._id}>
-                  <div className="col-md-3">
+                <div className="cart-item" key={p._id}>
+                  <div className="item-image">
                     <img
-                      src={`/api/v1/product/product-photo/${p._id}`}
-                      className="card-img-top"
+                      src={`${process.env.REACT_APP_API_ENDPOINT}/api/v1/product/product-photo/${p._id}`}
                       alt={p.name}
-                      width="100%"
-                      height="130px"
                     />
                   </div>
-                  <div className="col-md-9">
-                    <div className="d-flex justify-content-between align-items-center">
-                      <div>
-                        <h4>{p.name}</h4>
-                        <h6>{p.description.substring(0, 30)}</h6>
-                        <h6>Price : &#8377;{p.price}</h6>
+                  <div className="item-details">
+                    <div className="item-info">
+                      <h3 className="item-name">{p.name}</h3>
+                      <p className="item-description">
+                        {p.description.substring(0, 80)}...
+                      </p>
+                      <div className="item-price">
+                        <span className="price-amount">₹{p.price}</span>
+                        <span className="price-label">per item</span>
                       </div>
-                      <div className="d-flex align-items-center">
-                        <h6 className="me-3 mb-0">
-                          Quantity: {p.quantity || 1}
-                        </h6>
+                    </div>
+                    <div className="item-controls">
+                      <div className="quantity-controls">
                         <button
-                          className="btn btn-outline-secondary ml-1 me-2"
+                          className="quantity-btn"
                           onClick={() => updateQuantity(p._id, p.quantity - 1)}
                           disabled={p.quantity <= 1}
                         >
-                          -
+                          <i className="fas fa-minus"></i>
                         </button>
+                        <span className="quantity-display">
+                          {p.quantity || 1}
+                        </span>
                         <button
-                          className="btn btn-outline-secondary ms-2"
+                          className="quantity-btn"
                           onClick={() =>
                             updateQuantity(p._id, (p.quantity || 1) + 1)
                           }
                         >
-                          +
+                          <i className="fas fa-plus"></i>
                         </button>
-                        <div className="cart-remove-btn">
-                          <button
-                            className="btn btn-danger ms-2"
-                            onClick={() => removeCartItem(p._id)}
-                          >
-                            Remove
-                          </button>
-                        </div>
                       </div>
+                      <div className="item-total">
+                        <span className="total-amount">
+                          ₹{(p.price * (p.quantity || 1)).toLocaleString()}
+                        </span>
+                      </div>
+                      <button
+                        className="remove-btn"
+                        onClick={() => removeCartItem(p._id)}
+                      >
+                        <i className="fas fa-trash"></i>
+                      </button>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
-            <div className="col-md-5 cart-summary">
-              <h2>Cart Summary</h2>
-              <p>Total | Checkout | Payment</p>
-              <hr />
-              <h4>Total : {totalPrice()} </h4>
-              {auth?.user?.address ? (
-                <>
-                  <div className="mb-3">
-                    <h4>Current Address</h4>
-                    <h5>{auth?.user?.address}</h5>
-                    <button
-                      className="btn btn-outline-warning"
-                      onClick={() => navigate("/dashboard/user/profile")}
-                    >
-                      Update Address
-                    </button>
-                    {/* <button
-                      className="btn btn-success ms-3 button-outline"
-                      onClick={() => navigate("/checkout")}
-                    >
-                      Checkout
-                    </button> */}
-                  </div>
-                </>
-              ) : (
-                <div className="mb-3">
-                  {auth?.token ? (
-                    <button
-                      className="btn btn-outline-warning"
-                      onClick={() => navigate("/dashboard/user/profile")}
-                    >
-                      Update Address
-                    </button>
-                  ) : (
-                    <button
-                      className="btn btn-outline-warning"
-                      onClick={() =>
-                        navigate("/login", {
-                          state: "/cart",
-                        })
-                      }
-                    >
-                      Plase Login to checkout
-                    </button>
-                  )}
+
+            <div className="cart-summary">
+              <div className="summary-header">
+                <h2>Order Summary</h2>
+              </div>
+
+              <div className="summary-details">
+                <div className="summary-row">
+                  <span>Items ({cart.length})</span>
+                  <span>{totalPrice()}</span>
                 </div>
-              )}
-              <div className="mt-2 mx-3">
-                {auth?.token&&clientToken&&cart?.length ? (
-                  <>
-                    <DropIn
-                      options={{
-                        authorization: clientToken,
-                        paypal: {
-                          flow: "vault",
-                        },
-                        googlePay: {
-                          allowedAuthMethods: ["PAN_ONLY", "CRYPTOGRAM_3DS"],
-                          allowedCardNetworks: [
-                            "AMEX",
-                            "DISCOVER",
-                            "MASTERCARD",
-                            "VISA",
-                          ],
-                          billingAddressRequired: true,
-                          billingAddressParameters: {
-                            format: "FULL",
-                          },
-                          phoneNumberRequired: true,
-                          environment: "test",
-                        },
-                      }}
-                      onInstance={(instance) => setInstance(instance)}
-                    />
+                <div className="summary-row">
+                  <span>Shipping</span>
+                  <span className="free-shipping">Free</span>
+                </div>
+                <div className="summary-divider"></div>
+                <div className="summary-row total-row">
+                  <span>Total</span>
+                  <span className="total-price">{totalPrice()}</span>
+                </div>
+              </div>
+
+              <div className="address-section">
+                {auth?.user?.address ? (
+                  <div className="current-address">
+                    <h4>Delivery Address</h4>
+                    <p>{auth?.user?.address}</p>
                     <button
-                      onClick={handlePayment}
-                      className="btn btn-primary"
-                      disabled={loading || !instance || !auth?.user?.address}
+                      className="btn-update-address"
+                      onClick={() => navigate("/dashboard/user/profile")}
                     >
-                      {loading ? "Processing..." : "Make Payment"}{" "}
+                      <i className="fas fa-edit"></i>
+                      Update Address
                     </button>
-                  </>
+                  </div>
                 ) : (
-                  <p>Loading payment options...</p>
+                  <div className="address-required">
+                    {auth?.token ? (
+                      <button
+                        className="btn-add-address"
+                        onClick={() => navigate("/dashboard/user/profile")}
+                      >
+                        <i className="fas fa-plus"></i>
+                        Add Delivery Address
+                      </button>
+                    ) : (
+                      <button
+                        className="btn-login-required"
+                        onClick={() =>
+                          navigate("/login", {
+                            state: "/cart",
+                          })
+                        }
+                      >
+                        <i className="fas fa-sign-in-alt"></i>
+                        Login to Checkout
+                      </button>
+                    )}
+                  </div>
                 )}
               </div>
+
+              {auth?.token &&
+                clientToken &&
+                cart?.length &&
+                auth?.user?.address && (
+                  <div className="payment-section">
+                    <h4>Payment Method</h4>
+                    <div className="payment-dropin">
+                      <DropIn
+                        options={{
+                          authorization: clientToken,
+                          paypal: {
+                            flow: "vault",
+                          },
+                        }}
+                        onInstance={(instance) => setInstance(instance)}
+                      />
+                    </div>
+                    <button
+                      onClick={handlePayment}
+                      className="btn-checkout"
+                      disabled={loading || !instance}
+                    >
+                      {loading ? (
+                        <>
+                          <i className="fas fa-spinner fa-spin"></i>
+                          Processing...
+                        </>
+                      ) : (
+                        <>
+                          <i className="fas fa-lock"></i>
+                          Secure Checkout
+                        </>
+                      )}
+                    </button>
+                  </div>
+                )}
+
+              {!clientToken && auth?.token && (
+                <div className="payment-loading">
+                  <i className="fas fa-spinner fa-spin"></i>
+                  <p>Loading payment options...</p>
+                </div>
+              )}
             </div>
           </div>
-        </div>
+        )}
       </div>
     </Layout>
   );

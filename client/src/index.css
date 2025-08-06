@@ -1,66 +1,183 @@
+/* Import Google Fonts */
 @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400&display=swap");
 
+/* CSS Variables for Consistency */
+:root {
+  --primary-color: #000000;
+  --secondary-color: #ffefba;
+  --text-color: #333;
+  --font-family: "Poppins", sans-serif;
+  --font-size-base: 16px;
+  --spacing-base: 1rem;
+}
+
+/* Global Styles */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* font-family: 'Poppins', sans-serif; */
-/* font-family: 'Playfair Display', serif; */
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+  color: var(--text-color);
+}
 
-/* //navbar css */
+/* Navbar Styles */
 .navbar {
-  font-family: "Poppins", sans-serif;
+  font-family: var(--font-family);
   font-size: 17px;
   line-height: 26px;
   text-transform: uppercase;
   box-shadow: 0 8px 6px -6px gray;
-  --webkit-box-shadow: 0 8px 6px -6px gray;
   border-bottom: solid gray !important;
 }
 
 .nav-link {
   font-weight: 300 !important;
+  text-decoration: none !important;
+  border-bottom: none !important;
+}
+
+.nav-link:hover {
+  text-decoration: none !important;
+  border-bottom: none !important;
 }
 
 .active {
-  border-bottom: 2px solid black;
+  border-bottom: 2px solid black !important;
+  text-decoration: none !important;
 }
 
 .navbar-brand {
   font-weight: 700;
-  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
   letter-spacing: 3px;
   font-size: xx-large;
+  text-decoration: none !important;
 }
-/* =============================
-==========footer============= */
 
+.navbar-brand:hover {
+  text-decoration: none !important;
+}
+
+/* Dropdown toggle styles */
+.dropdown-toggle {
+  text-decoration: none !important;
+  border-bottom: none !important;
+}
+
+.dropdown-toggle:hover {
+  text-decoration: none !important;
+  border-bottom: none !important;
+}
+
+.dropdown-toggle:focus {
+  text-decoration: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+/* Dropdown menu items */
+.dropdown-item {
+  text-decoration: none !important;
+  border-bottom: none !important;
+}
+
+.dropdown-item:hover {
+  text-decoration: none !important;
+  border-bottom: none !important;
+}
+
+/* Footer Styles */
 .footer {
   color: white;
   padding: 25px;
-  background: #000000; /* fallback for old browsers */
-  background: -webkit-linear-gradient(
-    to right,
-    #434343,
-    #000000
-  ); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(to bottom, #323232 0%, #3F3F3F 40%, #1C1C1C 150%), linear-gradient(to top, rgba(255,255,255,0.40) 0%, rgba(0,0,0,0.25) 200%);
-  background-blend-mode: multiply;}
+  background: var(--primary-color);
+  text-align: center;
+  font-family: var(--font-family);
+  position: relative;
+  bottom: 0;
+  width: 100%;
+}
 
-.footer a {
+.footer-links a {
+  color: #ffffff;
   text-decoration: none;
-  color: white;
-  padding: 10px;
+  margin: 0 10px;
 }
 
-.footer a:hover {
-  color: #ffefba;
-  border-bottom: 1px solid #ffefba;
+.footer-links a:hover {
+  color: var(--secondary-color);
 }
-/* =================================
-======== page not found css ======= */
+
+.social-icons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.social-icons a {
+  color: white;
+  font-size: 20px;
+  text-decoration: none;
+}
+
+.social-icons a:hover {
+  color: var(--secondary-color);
+}
+
+.back-to-top a {
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.back-to-top a:hover {
+  color: var(--secondary-color);
+}
+
+/* Responsive Footer */
+@media (max-width: 768px) {
+  .footer {
+    padding: 15px;
+  }
+
+  .footer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .social-icons {
+    gap: 10px;
+  }
+
+  .back-to-top a {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer {
+    padding: 10px;
+  }
+
+  .footer-links {
+    font-size: 14px;
+  }
+
+  .social-icons a {
+    font-size: 18px;
+  }
+
+  .back-to-top a {
+    font-size: 12px;
+  }
+}
+/* Page Not Found Styles */
 .pnf {
   display: flex;
   min-height: 65vh;
@@ -85,12 +202,13 @@
   padding: 10px;
   margin-top: 10px;
 }
+
 .pnf-btn:hover {
   background-color: black;
   color: white;
 }
-/* ========================================= */
-/* =========contact us ========= */
+
+/* Contact Us Styles */
 .contactus {
   margin: 0;
   padding: 0;
@@ -100,8 +218,8 @@
   justify-content: center;
 }
 
-/* reguster */
-.register{
+/* Register Page Styles */
+.register {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -109,24 +227,29 @@
   flex-direction: column;
 }
 
-
-.product-link{
+.product-link {
   text-decoration: none !important;
   color: black;
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effect */
 }
+
+.product-link:hover {
+  transform: scale(1.02); /* Slight zoom on hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+}
+
 .cat-btn {
   padding: 40px 0px;
   font-size: 24px;
   text-transform: uppercase;
 }
+
 .cat-btn:hover {
   background-color: #434343;
   color: white;
 }
-/* ================
-====dashboard
-=================== */
 
+/* Dashboard Styles */
 .dashboard {
   margin-top: 100px !important;
 }
@@ -137,33 +260,16 @@
   padding: 20px 0px;
 }
 
-
-
-
-/* orders page */
-/* Orders page styles */
+/* Orders Page Styles */
 .orders-container {
   padding: 3rem;
   margin: 3rem;
-}
-
-.dashboard {
-  display: flex;
-  flex-direction: column;
 }
 
 .order-card {
   margin-bottom: 1rem;
   border: 1px solid #ddd;
   border-radius: 0.5rem;
-}
-
-.order-table {
-  margin-bottom: 1rem;
-}
-
-.order-products {
-  padding: 1rem;
 }
 
 .order-product {
@@ -173,88 +279,69 @@
   padding: 1rem;
   display: flex;
   flex-direction: row;
-  align-items: center; /* Center items vertically */
+  align-items: center;
 }
 
 .order-product-img {
   max-width: 100%;
   height: auto;
-  margin-right: 1rem; /* Space between image and content */
+  margin-right: 1rem;
 }
 
 .order-product-content {
   padding: 1rem;
-  flex: 1; /* Allow content to fill available space */
+  flex: 1;
 }
 
 @media (max-width: 768px) {
   .order-product {
-    flex-direction: row; /* Keep items in the same row */
-    flex-wrap: wrap; /* Allow wrapping if needed */
+    flex-direction: column;
   }
 
   .order-product-img {
-    width: 50%; /* Adjust width as needed */
-    margin-right: 1rem; /* Space between image and content */
+    width: 100%;
+    margin-bottom: 1rem;
   }
 
   .order-product-content {
-    width: 50%; /* Adjust width as needed */
-    text-align: left; /* Align text to the left */
+    width: 100%;
+    text-align: center;
   }
 }
 
-
-/* admin dashboard */
-.admin-dashboard{
+/* Admin Dashboard Styles */
+.admin-dashboard {
   display: flex;
   flex-direction: row;
   margin-top: 100px !important;
-
-}
-/* Admin dashboard page styles */
-.admin-dashboard {
-  padding: 1rem;
 }
 
 .admin-dashboard-menu {
-  padding-right: 1rem; /* Ensure some spacing between the menu and products */
+  padding-right: 1rem;
 }
 
 .admin-dashboard-products {
-  padding-left: 1rem; /* Ensure some spacing between the menu and products */
-}
-
-.admin-dashboard-title {
-  margin-bottom: 2rem;
-}
-
-.admin-dashboard-products {
+  padding-left: 1rem;
   display: flex;
-  flex-wrap: wrap; /* Allows cards to wrap to the next line if necessary */
-  justify-content: space-between; /* Distributes space between cards */
-}
-
-.product-link {
-  text-decoration: none;
-  color: inherit;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
 
 .admin-dashboard-card {
-  width: 18rem; /* Fixed width for all cards */
-  height: 100%; /* Ensures the card takes full height of its container */
+  width: 18rem;
+  height: 100%;
   display: flex;
   flex-direction: column;
   border: 1px solid #ddd;
   border-radius: 0.5rem;
-  overflow: hidden; /* Ensures no content spills outside the card */
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .admin-dashboard-card-img {
   width: 100%;
-  height: 12rem; /* Fixed height for the image */
-  object-fit: cover; /* Ensures image covers the area without distortion */
+  height: 12rem;
+  object-fit: cover;
 }
 
 .admin-dashboard-card-body {
@@ -262,46 +349,33 @@
   flex-direction: column;
   flex: 1;
   padding: 1rem;
-  text-align: center; /* Centers text within the card body */
-}
-
-.admin-dashboard-card-title {
-  font-size: 1.25rem;
-  margin-bottom: 0.5rem;
-}
-
-.admin-dashboard-card-text {
-  font-size: 1rem;
-  color: #333; /* Slightly darker text color for better readability */
+  text-align: center;
 }
 
 @media (max-width: 768px) {
   .admin-dashboard-card {
-    width: 18rem; /* Full width on small screens */
-    height: auto; /* Adjust height to content */
+    width: 100%;
+    height: auto;
   }
 
   .admin-dashboard-card-img {
-    height: 10rem; /* Adjust height for smaller screens */
+    height: 10rem;
   }
 }
 
-
 /* admin-update-product */
-.admin-update-product{
+.admin-update-product {
   margin-top: 100px !important;
-
 }
 
 /* all orders
  */
- /* Admin Orders Page Styles */
+/* Admin Orders Page Styles */
 .admin-all-orders-dashboard {
   display: flex;
   flex-direction: row;
   margin-top: 100px !important;
   padding: 1rem;
-
 }
 
 .admin-all-orders .card {
@@ -311,11 +385,19 @@
   padding: 1rem;
   border: 1px solid #ddd;
   border-radius: 0.5rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Added shadow for better visibility */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effect */
+}
+
+.admin-all-orders .card:hover {
+  transform: scale(1.02); /* Slight zoom on hover */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
 }
 
 .admin-all-orders .card img {
   max-width: 60%;
   height: auto;
+  border-radius: 0.5rem; /* Rounded corners for images */
 }
 
 .admin-all-orders .card-body {
@@ -351,14 +433,109 @@
   .admin-all-orders .card.flex-row {
     flex-direction: column;
     align-items: center;
+    padding: 1rem; /* Added padding for better spacing */
   }
-  
+
   .admin-all-orders .card img {
     margin-bottom: 1rem;
-    max-width: 50%;
+    max-width: 80%; /* Increased image size for better visibility */
   }
 
   .admin-all-orders .card-body {
     text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-all-orders .card {
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+  }
+
+  .admin-all-orders .card img {
+    max-width: 100%; /* Full width for smaller screens */
+    margin-bottom: 1rem;
+  }
+
+  .admin-all-orders .card-body {
+    text-align: center;
+    padding: 0.5rem; /* Reduced padding for smaller screens */
+  }
+}
+
+/* Products Page Styles */
+.product-link {
+  text-decoration: none !important;
+  color: black;
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effect */
+}
+
+.product-link:hover {
+  transform: scale(1.02); /* Slight zoom on hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+}
+
+.card {
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for better visibility */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: scale(1.03); /* Slight zoom on hover */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+}
+
+.card-img-top {
+  width: 100%;
+  height: 200px;
+  object-fit: cover; /* Ensure images fit within the card */
+  border-bottom: 1px solid #ddd;
+}
+
+.card-body {
+  padding: 1rem;
+  text-align: center;
+}
+
+.card-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.card-text {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+@media (max-width: 768px) {
+  .card-img-top {
+    height: 150px; /* Adjust image height for smaller screens */
+  }
+
+  .card-title {
+    font-size: 1rem;
+  }
+
+  .card-text {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .card-img-top {
+    height: 120px; /* Further adjust image height for very small screens */
+  }
+
+  .card-title {
+    font-size: 0.9rem;
+  }
+
+  .card-text {
+    font-size: 0.75rem;
   }
 }

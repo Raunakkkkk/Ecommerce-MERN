@@ -1,61 +1,177 @@
-/* ===================================
-========= register page  */
+/* Simple Auth Pages Styles */
 .form-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 70vh;
-  flex-direction: column;
-  /* background-color: #ffdee9; */
-  /* background-image: linear-gradient(0deg, #ffdee9 0%, #b5fffc 100%); */
-  background-image: linear-gradient(to top, #fff1eb 0%, #ace0f9 100%);}
+  min-height: 100vh;
+  background: #e5e7eb;
+  padding: 2rem;
+}
 
 .form-container form {
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  padding: 20px;
-  background-color: #fff;
+  background: #f3f4f6;
+  padding: 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
 }
 
 .form-container form .title {
   text-align: center;
-  margin-bottom: 15px;
-  font-weight: bold;
-  font-family: "Playfair Display", serif;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  font-size: 1.75rem;
+  color: #1f2937;
+}
+
+.form-container form .subtitle {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.form-container form .form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-container form .input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.form-container form .input-icon {
+  position: absolute;
+  left: 1rem;
+  color: #9ca3af;
+  z-index: 2;
 }
 
 .form-container form input {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: white;
+}
+
+.form-container form input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-container form input::placeholder {
+  color: #9ca3af;
+}
+
+.form-container form .btn-primary {
+  width: 100%;
+  padding: 0.75rem;
+  background: #3b82f6;
   border: none;
-  border-bottom: 1px solid #000;
-  border-radius: 0;
-}
-
-.form-container form button {
-  border: 1px solid black;
-  border-radius: 0;
-  background-color: #000;
+  border-radius: 8px;
   color: white;
-  width: 250px;
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 1rem;
 }
 
-.form-container form button:hover {
-  border: 1px solid black;
-  background: #000000; /* fallback for old browsers */
-  background: -webkit-linear-gradient(
-    to right,
-    #434343,
-    #000000
-  ); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(
-    to right,
-    #434343,
-    #000000
-  ); 
-}
-.forgot-btn {
-  background-color: #434343a4 !important;
-  border: 0 !important;
+.form-container form .btn-primary:hover {
+  background: #2563eb;
 }
 
-.forgot-btn:hover {
-  color: white !important;
+.form-container form .btn-primary:disabled {
+  opacity: 0.8;
+  cursor: not-allowed;
+  background: #6b7280;
+}
+
+.form-container form .btn-primary:disabled:hover {
+  background: #6b7280;
+}
+
+.form-container form .forgot-btn {
+  background: transparent;
+  color: #3b82f6;
+  border: none;
+  padding: 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.form-container form .forgot-btn:hover {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.form-container form .form-check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.form-container form .form-check-input {
+  width: auto;
+  margin: 0;
+}
+
+.form-container form .form-check-label {
+  color: #4b5563;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.form-container form .signup-link {
+  text-align: center;
+  margin-top: 1.5rem;
+  color: #4b5563;
+  font-size: 0.875rem;
+}
+
+.form-container form .signup-link a {
+  color: #3b82f6;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.form-container form .signup-link a:hover {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+/* Error states */
+.form-container form .error {
+  border-color: #ef4444 !important;
+}
+
+.form-container form .error-message {
+  color: #ef4444;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* Responsive design */
+@media (max-width: 640px) {
+  .form-container {
+    padding: 1rem;
+  }
+
+  .form-container form {
+    padding: 2rem;
+  }
+
+  .form-container form .title {
+    font-size: 1.5rem;
+  }
 }

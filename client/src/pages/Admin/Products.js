@@ -4,17 +4,24 @@ import Layout from "./../../components/layout/Layout";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
+
 const Products = () => {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   // Get all products
   const getAllProducts = async () => {
     try {
-      const { data } = await axios.get("/api/v1/product/get-product");
+      setLoading(true);
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_API_ENDPOINT}/api/v1/product/get-product`
+      );
       setProducts(data.products);
     } catch (error) {
       console.log(error);
-      toast.error("Something Went Wrong");
+      toast.error("Something went wrong while fetching products");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -24,39 +31,48 @@ const Products = () => {
   }, []);
 
   return (
-    <Layout>
-      <div className="row admin-dashboard">
-        <div className="col-md-3 admin-dashboard-menu">
-          <AdminMenu />
-        </div>
-        <div className="col-md-9 admin-dashboard-products">
-          <h1 className="text-center admin-dashboard-title">All Products List</h1>
-          <div className="d-flex flex-wrap">
-            {products?.map((p) => (
-              <Link
-                key={p._id}
-                to={`/dashboard/admin/product/${p.slug}`}
-                className="product-link"
-              >
-                <div className="p-3">
-                <div className="card admin-dashboard-card h-100">
-                  <img
-                    src={`/api/v1/product/product-photo/${p._id}`}
-                    className="card-img-top admin-dashboard-card-img"
-                    alt={p.name}
-                  />
-                  <div className="card-body admin-dashboard-card-body">
-                    <h5 className="card-title admin-dashboard-card-title">{p.name}</h5>
-                    <p className="card-text admin-dashboard-card-text">
-                    {p.description.length > 30 ? `${p.description.substring(0, 30)}...` : p.description}
-
-                      {/* {p.description} */}
-                      </p>
-                  </div>
+    <Layout title={"Dashboard - Manage Products"}>
+      <div className="container-fluid m-3 p-3 dashboard">
+        <div className="row">
+          <div className="col-md-3">
+            <AdminMenu />
+          </div>
+          <div className="col-md-9">
+            <h1>All Products</h1>
+            {loading ? (
+              <div className="text-center">Loading...</div>
+            ) : products.length === 0 ? (
+              <div className="text-center">No products available</div>
+            ) : (
+              <div className="container">
+                <div className="row">
+                  {products?.map((p) => (
+                    <div key={p._id} className="col-md-4 mb-4">
+                      <Link
+                        to={`/dashboard/admin/product/${p.slug}`}
+                        className="product-link"
+                      >
+                        <div className="card h-100">
+                          <img
+                            src={`${process.env.REACT_APP_API_ENDPOINT}/api/v1/product/product-photo/${p._id}`}
+                            className="card-img-top product-img"
+                            alt={p.name}
+                          />
+                          <div className="card-body">
+                            <h5 className="card-title">{p.name}</h5>
+                            <p className="card-text">
+                              {p.description.length > 30
+                                ? `${p.description.substring(0, 30)}...`
+                                : p.description}
+                            </p>
+                          </div>
+                        </div>
+                      </Link>
+                    </div>
+                  ))}
                 </div>
-                </div>
-              </Link>
-            ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

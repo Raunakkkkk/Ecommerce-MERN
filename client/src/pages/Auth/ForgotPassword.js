@@ -1,28 +1,40 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Layout from "../../components/layout/Layout";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import "../../styles/AuthStyles.css";
+import { useAuth } from "../../context/auth";
 
 const ForgotPasssword = () => {
   const [email, setEmail] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [answer, setAnswer] = useState("");
+  const [auth, setAuth] = useAuth();
 
   const navigate = useNavigate();
+
+  // Redirect if user is already logged in
+  useEffect(() => {
+    if (auth?.token) {
+      navigate("/dashboard/user");
+    }
+  }, [auth?.token, navigate]);
 
   // form function
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("/api/v1/auth/forgot-password", {
-        email,
-        newPassword,
-        answer,
-      });
+      const res = await axios.post(
+        `${process.env.REACT_APP_API_ENDPOINT}/api/v1/auth/forgot-password`,
+        {
+          email,
+          newPassword,
+          answer,
+        }
+      );
       if (res && res.data.success) {
-        toast.success('Password reset Successfully');
+        toast.success("Password reset Successfully");
 
         navigate("/login");
       } else {

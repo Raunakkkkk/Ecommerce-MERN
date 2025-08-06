@@ -274,3 +274,88 @@ export const orderStatusController = async (req, res) => {
     });
   }
 };
+
+export const getAllUsersController = async (req, res) => {
+  try {
+    const users = await userModel.find({}).select("-password");
+
+    // Get order counts for each user
+    const usersWithOrders = await Promise.all(
+      users.map(async (user) => {
+        const orderCount = await orderModel.countDocuments({ buyer: user._id });
+        return {
+          ...user.toObject(),
+          orderCount,
+        };
+      })
+    );
+
+    res.status(200).send({
+      success: true,
+      message: "All users fetched successfully",
+      users: usersWithOrders,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Error in getting users",
+      error,
+    });
+  }
+};
+
+export const deleteUserController = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // First delete all orders associated with this user
+    await orderModel.deleteMany({ buyer: id });
+
+    // Then delete the user
+    const user = await userModel.findByIdAndDelete(id);
+
+    if (!user) {
+      return res.status(404).send({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    res.status(200).send({
+      success: true,
+      message: "User and associated orders deleted successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Error in deleting user and associated orders",
+      error,
+    });
+  }
+};
+
+export const getUserOrdersController = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const orders = await orderModel
+      .find({ buyer: userId })
+      .populate("products", "-photo")
+      .populate("buyer", "name")
+      .sort({ createdAt: -1 });
+
+    res.status(200).send({
+      success: true,
+      message: "User orders fetched successfully",
+      orders,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Error in getting user orders",
+      error,
+    });
+  }
+};

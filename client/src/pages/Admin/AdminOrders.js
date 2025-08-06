@@ -14,18 +14,26 @@ const AdminOrders = () => {
     "Not Process",
     "Processing",
     "Shipped",
-    "deliverd",
-    "cancel",
+    "Delivered",
+    "Cancelled",
   ]);
-  const [changeStatus, setCHangeStatus] = useState("");
   const [orders, setOrders] = useState([]);
-  const [auth, setAuth] = useAuth();
+  const [auth] = useAuth();
+  const [loading, setLoading] = useState(true);
+
+  // Fetch all orders
   const getOrders = async () => {
     try {
-      const { data } = await axios.get("/api/v1/auth/all-orders");
+      setLoading(true);
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_API_ENDPOINT}/api/v1/auth/all-orders`
+      );
       setOrders(data);
     } catch (error) {
       console.log(error);
+      toast.error("Failed to fetch orders");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -33,88 +41,136 @@ const AdminOrders = () => {
     if (auth?.token) getOrders();
   }, [auth?.token]);
 
+  // Handle status change
   const handleChange = async (orderId, value) => {
     try {
-      const { data } = await axios.put(`/api/v1/auth/order-status/${orderId}`, {
-        status: value,
-      });
+      await axios.put(
+        `${process.env.REACT_APP_API_ENDPOINT}/api/v1/auth/order-status/${orderId}`,
+        { status: value }
+      );
+      toast.success("Order status updated successfully");
       getOrders();
     } catch (error) {
       console.log(error);
+      toast.error("Failed to update order status");
     }
   };
 
   return (
-    <Layout title={"All Orders Data"}>
-      <div className="row admin-all-orders-dashboard">
-        <div className="col-md-3">
-          <AdminMenu />
-        </div>
-        <div className="col-md-9">
-          <h1 className="">All Orders</h1>
-          {orders?.map((o, i) => {
-            return (
-              <div className="border shadow">
-                <table className="table">
-                  <thead>
+    <Layout title={"Dashboard - Manage Orders"}>
+      <div className="container-fluid m-3 p-3 dashboard">
+        <div className="row">
+          {/* Sidebar */}
+          <div className="col-md-3">
+            <AdminMenu />
+          </div>
+
+          {/* Main Content */}
+          <div className="col-md-9">
+            <h1 className=" mb-4">All Orders</h1>
+            {loading ? (
+              <div className="text-center">Loading...</div>
+            ) : orders.length === 0 ? (
+              <div className="text-center">No orders found</div>
+            ) : (
+              <div className="table-responsive">
+                <table className="table table-bordered table-hover">
+                  <thead className="table-primary">
                     <tr>
-                      <th scope="col">#</th>
-                      <th scope="col">Status</th>
-                      <th scope="col">Buyer</th>
-                      <th scope="col">Date</th>
-                      <th scope="col">Payment</th>
-                      <th scope="col">Quantity</th>
+                      <th>#</th>
+                      <th>Buyer</th>
+                      <th>Status</th>
+                      <th>Payment</th>
+                      <th>Quantity</th>
+                      <th>Total Price</th>
+                      <th>Order Date</th>
+                      <th>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>{i + 1}</td>
-                      <td>
-                        <Select
-                          bordered={false}
-                          onChange={(value) => handleChange(o._id, value)}
-                          defaultValue={o?.status}
-                        >
-                          {status.map((s, i) => (
-                            <Option key={i} value={s}>
-                              {s}
-                            </Option>
-                          ))}
-                        </Select>
-                      </td>
-                      <td>{o?.buyer?.name}</td>
-                      <td>{moment(o?.createAt).fromNow()}</td>
-                      <td>{o?.payment.success ? "Success" : "Failed"}</td>
-                      <td>{o?.products?.length}</td>
-                    </tr>
+                    {orders?.map((o, i) => (
+                      <tr key={o._id}>
+                        <td>{i + 1}</td>
+                        <td>{o?.buyer?.name}</td>
+                        <td>
+                          <Select
+                            bordered={false}
+                            onChange={(value) => handleChange(o._id, value)}
+                            defaultValue={o?.status}
+                            className="status-select"
+                          >
+                            {status.map((s, i) => (
+                              <Option key={i} value={s}>
+                                {s}
+                              </Option>
+                            ))}
+                          </Select>
+                        </td>
+                        <td>
+                          {o?.payment.success ? (
+                            <span className="text-success">Success</span>
+                          ) : (
+                            <span className="text-danger">Failed</span>
+                          )}
+                        </td>
+                        <td>{o?.products?.length}</td>
+                        <td>
+                          ₹{o?.products.reduce((acc, p) => acc + p.price, 0)}
+                        </td>
+                        <td>{moment(o?.createdAt).format("MMMM Do YYYY")}</td>
+                        <td>
+                          <button
+                            className="btn btn-sm btn-primary"
+                            data-bs-toggle="collapse"
+                            data-bs-target={`#orderDetails${i}`}
+                            aria-expanded="false"
+                            aria-controls={`orderDetails${i}`}
+                          >
+                            View Details
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
-                <div className="admin-all-orders container">
-                  {o?.products?.map((p, i) => (
-                    <div
-                      className="row mb-2 p-3 card flex-row admin-all-orders"
-                      key={p._id}
-                    >
-                      <div className="col-md-4">
-                        <img
-                          src={`/api/v1/product/product-photo/${p._id}`}
-                          className="card-img-top"
-                          alt={p.name}
-                          width="100px"
-                          height={"100px"}
-                        />
+              </div>
+            )}
+
+            {/* Order Details */}
+            {orders?.map((o, i) => (
+              <div
+                className="collapse mt-3"
+                id={`orderDetails${i}`}
+                key={`details-${o._id}`}
+              >
+                <div className="card card-body">
+                  <h5>Order #{i + 1} Details</h5>
+                  <div className="row">
+                    {o?.products?.map((p) => (
+                      <div className="col-md-4 mb-3" key={p._id}>
+                        <div className="card h-100">
+                          <img
+                            src={`${process.env.REACT_APP_API_ENDPOINT}/api/v1/product/product-photo/${p._id}`}
+                            className="card-img-top"
+                            alt={p.name}
+                          />
+                          <div className="card-body">
+                            <h6 className="card-title">{p.name}</h6>
+                            <p className="card-text">
+                              {p.description.substring(0, 50)}...
+                            </p>
+                            <p className="card-text">
+                              <strong>Price:</strong> ₹{p.price}
+                            </p>
+                          </div>
+                        </div>
                       </div>
-                      <div className="col-md-8">
-                        <p>{p.name}</p>
-                        <p>{p.description.substring(0, 30)}</p>
-                        <p>Price : {p.price}</p>
-                      </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               </div>
-            );
-          })}
+            ))}
+          </div>
         </div>
       </div>
     </Layout>
