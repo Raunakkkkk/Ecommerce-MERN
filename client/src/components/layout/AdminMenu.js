@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
 const AdminMenu = ({ loading = false }) => {
   const navigate = useNavigate();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   if (loading) {
     return (
@@ -28,16 +29,31 @@ const AdminMenu = ({ loading = false }) => {
       <div className="text-center">
         <div className="card border-0 shadow-sm">
           <div className="card-body py-3">
-            <h4
-              className="mb-0 fw-bold text-dark"
-              onClick={() => navigate("/dashboard/admin")}
-              style={{ cursor: "pointer" }}
-            >
-              <i className="fas fa-tools me-2"></i>
-              Admin Panel
-            </h4>
+            <div className="d-flex justify-content-between align-items-center">
+              <h4
+                className="mb-0 fw-bold text-dark"
+                onClick={() => navigate("/dashboard/admin")}
+                style={{ cursor: "pointer" }}
+              >
+                <i className="fas fa-tools me-2"></i>
+                Admin Panel
+              </h4>
+              <button
+                className="btn btn-outline-secondary btn-sm d-md-none"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                aria-label="Toggle menu"
+              >
+                <i
+                  className={`fas fa-chevron-${isMenuOpen ? "up" : "down"}`}
+                ></i>
+              </button>
+            </div>
           </div>
-          <div className="list-group list-group-flush">
+          <div
+            className={`list-group list-group-flush ${
+              !isMenuOpen ? "d-none d-md-block" : ""
+            }`}
+          >
             <NavLink
               to="/dashboard/admin/create-category"
               className={({ isActive }) =>

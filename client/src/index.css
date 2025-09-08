@@ -490,6 +490,146 @@ body {
   margin-top: 100px !important;
 }
 
+/* Ensure footer takes full width without causing overflow */
+footer {
+  width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  box-sizing: border-box;
+}
+
+/* Fix admin pages container to prevent overflow */
+.dashboard {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+/* Ensure body doesn't have horizontal scroll on admin pages */
+body:has(.dashboard) {
+  overflow-x: hidden;
+}
+
+/* Alternative approach for browsers that don't support :has() */
+.dashboard {
+  overflow-x: hidden;
+}
+
+/* Ensure main content area doesn't overflow */
+main {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+/* Fix admin container spacing issues */
+.dashboard .container-fluid {
+  max-width: 100%;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+/* Ensure admin content doesn't create horizontal overflow */
+.dashboard .row {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.dashboard .col-md-3,
+.dashboard .col-md-9 {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+/* Ensure footer container has no extra spacing on admin pages */
+.dashboard ~ footer .container {
+  max-width: 100%;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+/* Fix any potential spacing issues with footer content */
+.dashboard ~ footer .row {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* Admin Dashboard Mobile Responsiveness */
+@media (max-width: 768px) {
+  .dashboard .row {
+    flex-direction: column;
+  }
+
+  .dashboard .col-md-3 {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  .dashboard .col-md-9 {
+    width: 100%;
+  }
+
+  /* Make admin menu more compact on mobile */
+  .dashboard .card {
+    margin-bottom: 1rem;
+  }
+
+  .dashboard .list-group-item {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .dashboard .list-group-item i {
+    font-size: 0.8rem;
+  }
+
+  /* Admin menu toggle button styling */
+  .dashboard .btn-outline-secondary {
+    border-color: #6c757d;
+    color: #6c757d;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  .dashboard .btn-outline-secondary:hover {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: white;
+  }
+
+  /* Smooth transition for menu collapse */
+  .dashboard .list-group {
+    transition: all 0.3s ease;
+  }
+}
+
+/* Additional mobile improvements for very small screens */
+@media (max-width: 480px) {
+  .dashboard {
+    margin-top: 80px !important;
+  }
+
+  .dashboard .container-fluid {
+    padding: 0.5rem !important;
+  }
+
+  .dashboard .card {
+    border-radius: 8px;
+  }
+
+  .dashboard .list-group-item {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  .dashboard h4 {
+    font-size: 1.1rem;
+  }
+
+  .dashboard .btn-outline-secondary {
+    padding: 0.2rem 0.4rem;
+    font-size: 0.75rem;
+  }
+}
+
 .dashboard-menu h4 {
   background-color: #434343 !important;
   color: white;
