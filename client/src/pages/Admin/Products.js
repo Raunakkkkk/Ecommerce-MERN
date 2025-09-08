@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Skeleton } from "antd";
 import AdminMenu from "./../../components/layout/AdminMenu";
 import Layout from "./../../components/layout/Layout";
 import axios from "axios";
@@ -40,7 +41,27 @@ const Products = () => {
           <div className="col-md-9">
             <h1>All Products</h1>
             {loading ? (
-              <div className="text-center">Loading...</div>
+              <div className="container">
+                <div className="row">
+                  {[...Array(6)].map((_, i) => (
+                    <div key={i} className="col-md-4 mb-4">
+                      <div className="card h-100 p-2">
+                        <Skeleton.Image
+                          active
+                          style={{ width: "100%", height: 160 }}
+                        />
+                        <div className="mt-2">
+                          <Skeleton
+                            active
+                            title={{ width: "60%" }}
+                            paragraph={{ rows: 2 }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             ) : products.length === 0 ? (
               <div className="text-center">No products available</div>
             ) : (

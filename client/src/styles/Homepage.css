@@ -13,16 +13,24 @@
   font-family: "Playfair Display", serif;
 }
 
-.home-page {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center; /* Center cards on smaller screens */
+/* Using Bootstrap's grid for layout; remove extra space when sidebar hidden */
+.home-page .filters.d-none {
+  display: none !important;
 }
 .home-page .card {
   background-color: rgba(128, 128, 128, 0.097);
-  width: 100%; /* Full width on smaller screens */
-  max-width: 18rem; /* Maintain max width */
-  margin: 10px; /* Add spacing between cards */
+  width: 100%;
+  margin: 0; /* let Bootstrap gutters handle spacing */
+}
+
+/* Ensure even inner spacing for cards */
+.home-page .card .card-body {
+  padding: 12px;
+}
+
+/* Maintain consistent action button layout */
+.home-page .card .card-name-price {
+  gap: 8px;
 }
 .home-page .card:hover {
   transform: scale(0.9);
@@ -55,16 +63,24 @@
   } */
 
 .home-page .card-img-top {
-  height: 300px !important;
+  height: 200px; /* keep consistent with component inline style */
+  object-fit: cover;
 }
 
 /* ==================
   filters
   ============== */
 .filters h4 {
-  margin-top: 100px;
+  margin-top: 0; /* Avoid large gap pushing content down */
   color: gray !important;
   border-bottom: 1px solid rgba(128, 128, 128, 0.337);
+}
+
+@media (min-width: 992px) {
+  /* Optional breathing space on large screens only */
+  .filters h4 {
+    margin-top: 12px;
+  }
 }
 
 .ant-checkbox-wrapper {
@@ -79,8 +95,8 @@
   background-color: black;
   width: 100%;
   border: none;
-  border-radius: 0;
-  margin-top: 20px;
+  border-radius: 6px; /* match rounded inputs */
+  margin-top: 12px;
 }
 
 .loadmore {

@@ -7,14 +7,16 @@ import "../styles/CartStyles.css";
 import axios from "axios";
 import DropIn from "braintree-web-drop-in-react";
 import toast from "react-hot-toast";
+import { Skeleton } from "antd";
 
 const CartPage = () => {
-  const [auth, setAuth] = useAuth();
+  const [auth] = useAuth();
   const [cart, setCart] = useCart();
   const navigate = useNavigate();
   const [clientToken, setClientToken] = useState("");
   const [instance, setInstance] = useState("");
   const [loading, setLoading] = useState(false);
+  const [cartLoading, setCartLoading] = useState(true);
 
   const updateQuantity = (productId, newQuantity) => {
     const updatedCart = cart.map((item) => {
@@ -43,7 +45,7 @@ const CartPage = () => {
   const totalPrice = () => {
     try {
       let total = 0;
-      cart?.map((item) => {
+      cart?.forEach((item) => {
         total = total + item.price * item.quantity;
       });
       return total.toLocaleString("en-US", {
@@ -60,18 +62,12 @@ const CartPage = () => {
     localStorage.removeItem("cart");
   };
 
-  const getToken = async () => {
-    try {
-      const { data } = await axios.get(
-        `${process.env.REACT_APP_API_ENDPOINT}/api/v1/product/braintree/token`
-      );
-      setClientToken(data?.clientToken);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   useEffect(() => {
+    // Simulate cart loading
+    const timer = setTimeout(() => {
+      setCartLoading(false);
+    }, 1000);
+
     // Fetch the client token for Braintree DropIn
     const fetchClientToken = async () => {
       try {
@@ -88,6 +84,8 @@ const CartPage = () => {
     if (auth?.token) {
       fetchClientToken();
     }
+
+    return () => clearTimeout(timer);
   }, [auth?.token]);
 
   const handlePayment = async () => {
@@ -99,7 +97,7 @@ const CartPage = () => {
     try {
       setLoading(true);
       const { nonce } = await instance.requestPaymentMethod(); // Get the payment method nonce
-      const { data } = await axios.post(
+      await axios.post(
         `${process.env.REACT_APP_API_ENDPOINT}/api/v1/product/braintree/payment`,
         {
           nonce,
@@ -119,6 +117,54 @@ const CartPage = () => {
       toast.error("Payment failed. Please try again.");
     }
   };
+
+  // Skeleton for cart items
+  const CartItemSkeleton = () => (
+    <div className="cart-item">
+      <div className="item-image">
+        <Skeleton.Image
+          active
+          style={{
+            width: "100%",
+            height: "120px",
+          }}
+        />
+      </div>
+      <div className="item-details">
+        <div className="item-info">
+          <Skeleton.Input
+            active
+            style={{ width: "80%", marginBottom: "8px" }}
+          />
+          <Skeleton active paragraph={{ rows: 2 }} />
+          <Skeleton.Input active style={{ width: "60%" }} />
+        </div>
+        <div className="item-controls">
+          <div className="quantity-controls">
+            <Skeleton.Button
+              active
+              size="small"
+              style={{ width: "32px", height: "32px" }}
+            />
+            <Skeleton.Input active size="small" style={{ width: "40px" }} />
+            <Skeleton.Button
+              active
+              size="small"
+              style={{ width: "32px", height: "32px" }}
+            />
+          </div>
+          <div className="item-total">
+            <Skeleton.Input active style={{ width: "80px" }} />
+          </div>
+          <Skeleton.Button
+            active
+            size="small"
+            style={{ width: "32px", height: "32px" }}
+          />
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <Layout>
@@ -162,61 +208,69 @@ const CartPage = () => {
         {cart?.length > 0 && (
           <div className="cart-content">
             <div className="cart-items">
-              {cart?.map((p) => (
-                <div className="cart-item" key={p._id}>
-                  <div className="item-image">
-                    <img
-                      src={`${process.env.REACT_APP_API_ENDPOINT}/api/v1/product/product-photo/${p._id}`}
-                      alt={p.name}
-                    />
-                  </div>
-                  <div className="item-details">
-                    <div className="item-info">
-                      <h3 className="item-name">{p.name}</h3>
-                      <p className="item-description">
-                        {p.description.substring(0, 80)}...
-                      </p>
-                      <div className="item-price">
-                        <span className="price-amount">₹{p.price}</span>
-                        <span className="price-label">per item</span>
+              {cartLoading ? (
+                <>
+                  <CartItemSkeleton />
+                  <CartItemSkeleton />
+                  <CartItemSkeleton />
+                </>
+              ) : (
+                cart?.map((p) => (
+                  <div className="cart-item" key={p._id}>
+                    <div className="item-image">
+                      <img
+                        src={`${process.env.REACT_APP_API_ENDPOINT}/api/v1/product/product-photo/${p._id}`}
+                        alt={p.name}
+                      />
+                    </div>
+                    <div className="item-details">
+                      <div className="item-info">
+                        <h3 className="item-name">{p.name}</h3>
+                        <p className="item-description">{p.description}</p>
+                        <div className="item-price">
+                          <span className="price-amount">₹{p.price}</span>
+                          <span className="price-label">per item</span>
+                        </div>
+                      </div>
+                      <div className="item-controls">
+                        <div className="quantity-controls">
+                          <button
+                            className="quantity-btn"
+                            onClick={() =>
+                              updateQuantity(p._id, p.quantity - 1)
+                            }
+                            disabled={p.quantity <= 1}
+                          >
+                            <i className="fas fa-minus"></i>
+                          </button>
+                          <span className="quantity-display">
+                            {p.quantity || 1}
+                          </span>
+                          <button
+                            className="quantity-btn"
+                            onClick={() =>
+                              updateQuantity(p._id, (p.quantity || 1) + 1)
+                            }
+                          >
+                            <i className="fas fa-plus"></i>
+                          </button>
+                        </div>
+                        <div className="item-total">
+                          <span className="total-amount">
+                            ₹{(p.price * (p.quantity || 1)).toLocaleString()}
+                          </span>
+                        </div>
+                        <button
+                          className="remove-btn"
+                          onClick={() => removeCartItem(p._id)}
+                        >
+                          <i className="fas fa-trash"></i>
+                        </button>
                       </div>
                     </div>
-                    <div className="item-controls">
-                      <div className="quantity-controls">
-                        <button
-                          className="quantity-btn"
-                          onClick={() => updateQuantity(p._id, p.quantity - 1)}
-                          disabled={p.quantity <= 1}
-                        >
-                          <i className="fas fa-minus"></i>
-                        </button>
-                        <span className="quantity-display">
-                          {p.quantity || 1}
-                        </span>
-                        <button
-                          className="quantity-btn"
-                          onClick={() =>
-                            updateQuantity(p._id, (p.quantity || 1) + 1)
-                          }
-                        >
-                          <i className="fas fa-plus"></i>
-                        </button>
-                      </div>
-                      <div className="item-total">
-                        <span className="total-amount">
-                          ₹{(p.price * (p.quantity || 1)).toLocaleString()}
-                        </span>
-                      </div>
-                      <button
-                        className="remove-btn"
-                        onClick={() => removeCartItem(p._id)}
-                      >
-                        <i className="fas fa-trash"></i>
-                      </button>
-                    </div>
                   </div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
 
             <div className="cart-summary">
@@ -224,21 +278,39 @@ const CartPage = () => {
                 <h2>Order Summary</h2>
               </div>
 
-              <div className="summary-details">
-                <div className="summary-row">
-                  <span>Items ({cart.length})</span>
-                  <span>{totalPrice()}</span>
+              {cartLoading ? (
+                <div className="summary-details">
+                  <div className="summary-row">
+                    <Skeleton.Input active style={{ width: "60%" }} />
+                    <Skeleton.Input active style={{ width: "30%" }} />
+                  </div>
+                  <div className="summary-row">
+                    <Skeleton.Input active style={{ width: "40%" }} />
+                    <Skeleton.Input active style={{ width: "20%" }} />
+                  </div>
+                  <div className="summary-divider"></div>
+                  <div className="summary-row total-row">
+                    <Skeleton.Input active style={{ width: "30%" }} />
+                    <Skeleton.Input active style={{ width: "40%" }} />
+                  </div>
                 </div>
-                <div className="summary-row">
-                  <span>Shipping</span>
-                  <span className="free-shipping">Free</span>
+              ) : (
+                <div className="summary-details">
+                  <div className="summary-row">
+                    <span>Items ({cart.length})</span>
+                    <span>{totalPrice()}</span>
+                  </div>
+                  <div className="summary-row">
+                    <span>Shipping</span>
+                    <span className="free-shipping">Free</span>
+                  </div>
+                  <div className="summary-divider"></div>
+                  <div className="summary-row total-row">
+                    <span>Total</span>
+                    <span className="total-price">{totalPrice()}</span>
+                  </div>
                 </div>
-                <div className="summary-divider"></div>
-                <div className="summary-row total-row">
-                  <span>Total</span>
-                  <span className="total-price">{totalPrice()}</span>
-                </div>
-              </div>
+              )}
 
               <div className="address-section">
                 {auth?.user?.address ? (

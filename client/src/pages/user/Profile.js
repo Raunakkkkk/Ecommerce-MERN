@@ -57,70 +57,98 @@ const Profile = () => {
     <Layout title={"Your Profile"}>
       <div className="container-fluid m-3 p-3 dashboard">
         <div className="row">
+          {/* Sidebar */}
           <div className="col-md-3">
             <UserMenu />
           </div>
-          <div className="col-md-9">
-            <div className="form-container ">
-              <form onSubmit={handleSubmit}>
-                <h4 className="title">USER PROFILE</h4>
-                <div className="mb-3">
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="form-control"
-                    id="exampleInputEmail1"
-                    placeholder="Enter Your Name"
-                    autoFocus
-                  />
-                </div>
-                <div className="mb-3">
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="form-control"
-                    id="exampleInputEmail1"
-                    placeholder="Enter Your Email "
-                    disabled
-                  />
-                </div>
-                <div className="mb-3">
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="form-control"
-                    id="exampleInputPassword1"
-                    placeholder="Enter Your Password"
-                  />
-                </div>
-                <div className="mb-3">
-                  <input
-                    type="text"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    className="form-control"
-                    id="exampleInputEmail1"
-                    placeholder="Enter Your Phone"
-                  />
-                </div>
-                <div className="mb-3">
-                  <input
-                    type="text"
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                    className="form-control"
-                    id="exampleInputEmail1"
-                    placeholder="Enter Your Address"
-                  />
-                </div>
 
-                <button type="submit" className="btn btn-primary">
-                  UPDATE
-                </button>
-              </form>
+          {/* Main Content */}
+          <div className="col-md-9">
+            <div className=" p-3">
+              <h2 className="mb-3 text-center">User Profile</h2>
+              <div className="d-flex justify-content-center">
+                <form
+                  onSubmit={handleSubmit}
+                  className="row g-3"
+                  style={{ maxWidth: "600px", width: "100%" }}
+                >
+                  <div className="col-md-6">
+                    <label htmlFor="name" className="form-label fw-semibold">
+                      Name
+                    </label>
+                    <input
+                      type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      className="form-control"
+                      id="name"
+                      placeholder="Enter Your Name"
+                      autoFocus
+                    />
+                  </div>
+                  <div className="col-md-6">
+                    <label htmlFor="email" className="form-label fw-semibold">
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="form-control"
+                      id="email"
+                      placeholder="Enter Your Email"
+                      disabled
+                    />
+                  </div>
+                  <div className="col-md-6">
+                    <label
+                      htmlFor="password"
+                      className="form-label fw-semibold"
+                    >
+                      Password
+                    </label>
+                    <input
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="form-control"
+                      id="password"
+                      placeholder="Enter New Password"
+                    />
+                  </div>
+                  <div className="col-md-6">
+                    <label htmlFor="phone" className="form-label fw-semibold">
+                      Phone
+                    </label>
+                    <input
+                      type="text"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      className="form-control"
+                      id="phone"
+                      placeholder="Enter Your Phone"
+                    />
+                  </div>
+                  <div className="col-12">
+                    <label htmlFor="address" className="form-label fw-semibold">
+                      Address
+                    </label>
+                    <input
+                      type="text"
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
+                      className="form-control"
+                      id="address"
+                      placeholder="Enter Your Address"
+                    />
+                  </div>
+                  <div className="col-12">
+                    <button type="submit" className="btn btn-primary">
+                      UPDATE
+                    </button>
+                  </div>
+                </form>
+              </div>
             </div>
           </div>
         </div>

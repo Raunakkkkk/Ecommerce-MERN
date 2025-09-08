@@ -1,18 +1,13 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react";
-import Layout from "../components/layout/Layout";
 import axios from "axios";
-import { Checkbox, Radio, Dropdown, Button } from "antd";
-import { Prices } from "../components/Prices";
+import { Dropdown, Button, Skeleton } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/cart";
 import toast from "react-hot-toast";
-import {
-  FaFilter,
-  FaTimes,
-  FaChevronLeft,
-  FaChevronRight,
-} from "react-icons/fa";
+import { FaFilter, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import "../styles/Homepage.css";
+import Layout from "../components/layout/Layout";
+import Filters from "../components/Filters";
 
 const HomePages = () => {
   const [products, setProducts] = useState([]);
@@ -31,8 +26,8 @@ const HomePages = () => {
 
   // Calculate pagination values
   const totalPages = Math.ceil(total / limit);
-  const startIndex = (page - 1) * limit + 1;
-  const endIndex = Math.min(page * limit, total);
+  const startIndex = total === 0 ? 0 : (page - 1) * limit + 1;
+  const endIndex = total === 0 ? 0 : Math.min(page * limit, total);
 
   // Get all categories
   const getAllCategory = useCallback(async () => {
@@ -56,7 +51,7 @@ const HomePages = () => {
         `${API_ENDPOINT}/api/v1/product/get-product?page=${page}&limit=${limit}`
       );
       setProducts(data.products || []);
-      setTotal(data.total || 0);
+      setTotal((data.total ?? data.counTotal) || 0);
     } catch (error) {
       console.error("Error fetching products:", error);
       toast.error("Failed to load products");
@@ -74,7 +69,7 @@ const HomePages = () => {
         { checked, radio, page, limit }
       );
       setProducts(data?.products || []);
-      setTotal(data?.total || 0);
+      setTotal((data?.total ?? data?.counTotal) || 0);
     } catch (error) {
       console.error("Error filtering products:", error);
       toast.error("Failed to filter products");
@@ -173,12 +168,46 @@ const HomePages = () => {
     return pages;
   }, [page, totalPages]);
 
+  // Memoized skeleton cards
+  const skeletonCards = useMemo(() => {
+    return [...Array(8)].map((_, index) => (
+      <div
+        className="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 mb-4"
+        key={`skeleton-${index}`}
+      >
+        <div className="card h-100">
+          <Skeleton.Image
+            active
+            style={{
+              width: "100%",
+              height: "200px",
+            }}
+          />
+          <div className="card-body d-flex flex-column">
+            <div className="card-name-price">
+              <Skeleton.Input active size="small" style={{ width: "70%" }} />
+              <Skeleton.Input active size="small" style={{ width: "50%" }} />
+            </div>
+            <Skeleton active paragraph={{ rows: 2 }} />
+            <div className="card-name-price mt-auto">
+              <Skeleton.Button active size="small" style={{ width: "80px" }} />
+              <Skeleton.Button active size="small" style={{ width: "80px" }} />
+            </div>
+          </div>
+        </div>
+      </div>
+    ));
+  }, []);
+
   // Memoized product cards
   const productCards = useMemo(() => {
     return products?.map((p) => {
       const imageUrl = `${API_ENDPOINT}/api/v1/product/product-photo/${p._id}`;
       return (
-        <div className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4" key={p._id}>
+        <div
+          className="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 mb-4"
+          key={p._id}
+        >
           <div className="card h-100">
             <img
               src={imageUrl}
@@ -224,62 +253,32 @@ const HomePages = () => {
     });
   }, [products, API_ENDPOINT, navigate, addToCart]);
 
-  // Mobile filters dropdown content
+  // Mobile/Medium filters dropdown content
   const mobileFiltersContent = (
     <div className="mobile-filters p-3">
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <h5 className="mb-0">Filters</h5>
-        <button
-          className="btn btn-sm btn-outline-secondary"
-          onClick={clearFilters}
-        >
-          <FaTimes /> Clear
-        </button>
-      </div>
-
-      <div className="mb-4">
-        <h6>Filter by Category</h6>
-        <div className="d-flex flex-column">
-          {categories?.map((c) => (
-            <Checkbox
-              key={c._id}
-              onChange={(e) => handleFilter(e.target.checked, c._id)}
-            >
-              {c.name}
-            </Checkbox>
-          ))}
-        </div>
-      </div>
-
-      <div className="mb-4">
-        <h6>Filter by Price</h6>
-        <div className="d-flex flex-column">
-          <Radio.Group onChange={(e) => setRadio(e.target.value)}>
-            {Prices?.map((p) => (
-              <div key={p._id}>
-                <Radio value={p.array}>{p.name}</Radio>
-              </div>
-            ))}
-          </Radio.Group>
-        </div>
-      </div>
+      <Filters
+        categories={categories}
+        onCategoryToggle={handleFilter}
+        onPriceChange={setRadio}
+        onClear={clearFilters}
+      />
     </div>
   );
 
   // Custom Pagination Component
   const CustomPagination = () => {
-    if (totalPages <= 1) return null;
-
+    const infoText =
+      total === 0
+        ? "No results"
+        : `Showing ${startIndex} to ${endIndex} of ${total} results`;
     return (
       <div className="custom-pagination">
-        <div className="pagination-info">
-          Showing {startIndex} to {endIndex} of {total} results
-        </div>
+        <div className="pagination-info">{infoText}</div>
         <div className="pagination-controls">
           <button
             className="pagination-btn"
             onClick={handlePrevPage}
-            disabled={page === 1}
+            disabled={page === 1 || total === 0}
           >
             <FaChevronLeft />
           </button>
@@ -302,7 +301,7 @@ const HomePages = () => {
           <button
             className="pagination-btn"
             onClick={handleNextPage}
-            disabled={page === totalPages}
+            disabled={page === totalPages || total === 0}
           >
             <FaChevronRight />
           </button>
@@ -340,37 +339,17 @@ const HomePages = () => {
 
       <div className="container-fluid row mt-3 home-page">
         {/* Desktop Filters */}
-        <div className="col-md-3 col-lg-2 filters d-none d-md-block">
-          <h4 className="text-center">Filter by Category</h4>
-          <div className="d-flex flex-column">
-            {categories?.map((c) => (
-              <Checkbox
-                key={c._id}
-                onChange={(e) => handleFilter(e.target.checked, c._id)}
-              >
-                {c.name}
-              </Checkbox>
-            ))}
-          </div>
-          <h4 className="text-center mt-4">Filter by Price</h4>
-          <div className="d-flex flex-column">
-            <Radio.Group onChange={(e) => setRadio(e.target.value)}>
-              {Prices?.map((p) => (
-                <div key={p._id}>
-                  <Radio value={p.array}>{p.name}</Radio>
-                </div>
-              ))}
-            </Radio.Group>
-          </div>
-          <div className="d-flex flex-column mt-3">
-            <button className="btn btn-danger" onClick={clearFilters}>
-              Clear Filters
-            </button>
-          </div>
+        <div className="col-md-3 col-lg-2 d-none d-lg-block">
+          <Filters
+            categories={categories}
+            onCategoryToggle={handleFilter}
+            onPriceChange={setRadio}
+            onClear={clearFilters}
+          />
         </div>
 
-        {/* Mobile Filters Dropdown */}
-        <div className="d-md-none mb-3">
+        {/* Small and Medium Filters Dropdown */}
+        <div className="d-lg-none mb-3">
           <Dropdown
             overlay={mobileFiltersContent}
             trigger={["click"]}
@@ -384,17 +363,14 @@ const HomePages = () => {
           </Dropdown>
         </div>
 
-        <div className="col-md-9 col-lg-10">
+        <div className="col-12 col-lg-10">
           <h1 className="text-center">All Items</h1>
-          {loading && (
-            <div className="text-center">
-              <div className="spinner-border" role="status">
-                <span className="visually-hidden">Loading...</span>
-              </div>
+          <div className="row">
+            {loading ? skeletonCards : productCards}
+            <div className="col-12">
+              <CustomPagination />
             </div>
-          )}
-          <div className="row">{productCards}</div>
-          {!loading && total > 0 && <CustomPagination />}
+          </div>
         </div>
       </div>
 
@@ -404,32 +380,42 @@ const HomePages = () => {
             .home-page {
               margin-top: 80px !important;
             }
-            
             .mobile-filters-dropdown .ant-dropdown-menu {
               max-width: 300px;
               width: 100vw;
               margin: 0 10px;
             }
-            
-            .mobile-filters {
-              background: white;
-              border-radius: 8px;
-              box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-              max-height: 70vh;
-              overflow-y: auto;
-            }
+          }
+
+          /* Ensure dropdown overlay is opaque on sm and md */
+          .mobile-filters-dropdown .ant-dropdown,
+          .mobile-filters-dropdown .ant-dropdown-menu,
+          .mobile-filters-dropdown .ant-dropdown-content,
+          .mobile-filters-dropdown .ant-dropdown-menu-root,
+          .mobile-filters {
+            background: #ffffff !important;
+          }
+
+          .mobile-filters {
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            max-height: 70vh;
+            overflow-y: auto;
           }
 
           .custom-pagination {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             align-items: center;
+            justify-content: space-between;
             gap: 1rem;
             margin: 2rem 0;
             padding: 1rem;
             background: white;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            flex-wrap: wrap;
           }
 
           .pagination-info {
@@ -441,8 +427,8 @@ const HomePages = () => {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            flex-wrap: wrap;
-            justify-content: center;
+            flex-wrap: nowrap;
+            justify-content: flex-end;
           }
 
           .pagination-btn {

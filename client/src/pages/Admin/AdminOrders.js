@@ -3,23 +3,25 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useAuth } from "../../context/auth";
 import moment from "moment";
-import { Select } from "antd";
+import { Select, Modal, Skeleton } from "antd";
 import Layout from "../../components/layout/Layout";
 import AdminMenu from "../../components/layout/AdminMenu";
 
 const { Option } = Select;
 
 const AdminOrders = () => {
-  const [status, setStatus] = useState([
+  const status = [
     "Not Process",
     "Processing",
     "Shipped",
     "Delivered",
     "Cancelled",
-  ]);
+  ];
   const [orders, setOrders] = useState([]);
   const [auth] = useAuth();
   const [loading, setLoading] = useState(true);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [activeOrder, setActiveOrder] = useState(null);
 
   // Fetch all orders
   const getOrders = async () => {
@@ -69,7 +71,37 @@ const AdminOrders = () => {
           <div className="col-md-9">
             <h1 className=" mb-4">All Orders</h1>
             {loading ? (
-              <div className="text-center">Loading...</div>
+              <div className="table-responsive">
+                <table className="table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Buyer</th>
+                      <th>Status</th>
+                      <th>Payment</th>
+                      <th>Quantity</th>
+                      <th>Total Price</th>
+                      <th>Order Date</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[...Array(5)].map((_, i) => (
+                      <tr key={i}>
+                        {Array.from({ length: 8 }).map((__, j) => (
+                          <td key={j}>
+                            <Skeleton
+                              active
+                              paragraph={false}
+                              title={{ width: "80%" }}
+                            />
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             ) : orders.length === 0 ? (
               <div className="text-center">No orders found</div>
             ) : (
@@ -121,10 +153,10 @@ const AdminOrders = () => {
                         <td>
                           <button
                             className="btn btn-sm btn-primary"
-                            data-bs-toggle="collapse"
-                            data-bs-target={`#orderDetails${i}`}
-                            aria-expanded="false"
-                            aria-controls={`orderDetails${i}`}
+                            onClick={() => {
+                              setActiveOrder(o);
+                              setIsDetailsOpen(true);
+                            }}
                           >
                             View Details
                           </button>
@@ -135,41 +167,111 @@ const AdminOrders = () => {
                 </table>
               </div>
             )}
-
-            {/* Order Details */}
-            {orders?.map((o, i) => (
-              <div
-                className="collapse mt-3"
-                id={`orderDetails${i}`}
-                key={`details-${o._id}`}
-              >
-                <div className="card card-body">
-                  <h5>Order #{i + 1} Details</h5>
-                  <div className="row">
-                    {o?.products?.map((p) => (
-                      <div className="col-md-4 mb-3" key={p._id}>
-                        <div className="card h-100">
-                          <img
-                            src={`${process.env.REACT_APP_API_ENDPOINT}/api/v1/product/product-photo/${p._id}`}
-                            className="card-img-top"
-                            alt={p.name}
-                          />
-                          <div className="card-body">
-                            <h6 className="card-title">{p.name}</h6>
-                            <p className="card-text">
-                              {p.description.substring(0, 50)}...
-                            </p>
-                            <p className="card-text">
-                              <strong>Price:</strong> ₹{p.price}
-                            </p>
-                          </div>
-                        </div>
+            <Modal
+              title={
+                activeOrder
+                  ? `Order #${activeOrder?._id?.slice(-6)}`
+                  : "Order Details"
+              }
+              open={isDetailsOpen}
+              onCancel={() => setIsDetailsOpen(false)}
+              footer={null}
+              width={900}
+            >
+              {!activeOrder ? (
+                <Skeleton active />
+              ) : (
+                <div>
+                  <div className="row g-3 mb-3">
+                    <div className="col-md-6">
+                      <div>
+                        <strong>Buyer:</strong>{" "}
+                        {activeOrder?.buyer?.name || "-"}
                       </div>
-                    ))}
+                      <div>
+                        <strong>Email:</strong>{" "}
+                        {activeOrder?.buyer?.email || "-"}
+                      </div>
+                      <div>
+                        <strong>Address:</strong>{" "}
+                        {activeOrder?.buyer?.address || "-"}
+                      </div>
+                    </div>
+                    <div className="col-md-6">
+                      <div>
+                        <strong>Status:</strong> {activeOrder?.status}
+                      </div>
+                      <div>
+                        <strong>Payment:</strong>{" "}
+                        {activeOrder?.payment?.success ? (
+                          <span className="text-success">Success</span>
+                        ) : (
+                          <span className="text-danger">Failed</span>
+                        )}
+                      </div>
+                      <div>
+                        <strong>Items:</strong>{" "}
+                        {activeOrder?.products?.length || 0}
+                      </div>
+                      <div>
+                        <strong>Total:</strong> ₹
+                        {(activeOrder?.products || []).reduce(
+                          (acc, p) => acc + (p.price || 0),
+                          0
+                        )}
+                      </div>
+                      <div>
+                        <strong>Date:</strong>{" "}
+                        {moment(activeOrder?.createdAt).format(
+                          "MMMM Do YYYY, h:mm a"
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  <h6 className="mb-3">Products</h6>
+                  <div className="table-responsive">
+                    <table className="table table-sm align-middle">
+                      <thead>
+                        <tr>
+                          <th className="d-none d-sm-table-cell">Image</th>
+                          <th>Name</th>
+                          <th>Description</th>
+                          <th className="text-end">Price (₹)</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {activeOrder?.products?.map((p) => (
+                          <tr key={p._id}>
+                            <td
+                              className="d-none d-sm-table-cell"
+                              style={{ width: "88px" }}
+                            >
+                              <img
+                                src={`${process.env.REACT_APP_API_ENDPOINT}/api/v1/product/product-photo/${p._id}`}
+                                alt={p.name}
+                                className="img-fluid rounded"
+                                style={{
+                                  maxWidth: "72px",
+                                  maxHeight: "72px",
+                                  objectFit: "cover",
+                                }}
+                              />
+                            </td>
+                            <td>{p.name}</td>
+                            <td className="text-muted">
+                              {(p.description || "").substring(0, 80)}
+                              {(p.description || "").length > 80 ? "..." : ""}
+                            </td>
+                            <td className="text-end">{p.price}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
                 </div>
-              </div>
-            ))}
+              )}
+            </Modal>
           </div>
         </div>
       </div>

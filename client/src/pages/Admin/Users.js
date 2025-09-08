@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Layout from "../../components/layout/Layout";
 import AdminMenu from "../../components/layout/AdminMenu";
 import axios from "axios";
-import { Table, Space, Modal } from "antd";
+import { Table, Space, Modal, Skeleton } from "antd";
 import { useAuth } from "../../context/auth";
 import { toast } from "react-hot-toast";
 
@@ -203,11 +203,12 @@ const Users = () => {
           <div className="col-md-9">
             <h1>All Users List</h1>
             {loadingUsers ? (
-              <div className="text-center">
-                <h3>Loading users...</h3>
+              <div>
+                <Skeleton active title paragraph={{ rows: 5 }} />
+                <Skeleton active title paragraph={{ rows: 5 }} />
               </div>
             ) : (
-              <Table columns={columns} dataSource={users} />
+              <Table columns={columns} dataSource={users} rowKey="_id" />
             )}
           </div>
         </div>
@@ -221,9 +222,7 @@ const Users = () => {
         width={800}
       >
         {loadingOrders ? (
-          <div className="text-center">
-            <h3>Loading orders...</h3>
-          </div>
+          <Skeleton active title paragraph={{ rows: 6 }} />
         ) : (
           <Table
             columns={orderColumns}

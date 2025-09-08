@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Skeleton } from "antd";
 import Layout from "../../components/layout/Layout";
 import AdminMenu from "../../components/layout/AdminMenu";
 import toast from "react-hot-toast";
@@ -7,6 +8,7 @@ import CategoryForm from "../../components/Form/CategoryForm";
 import { Modal } from "antd";
 const CreateCategory = () => {
   const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const [visible, setVisible] = useState(false);
 
@@ -36,6 +38,7 @@ const CreateCategory = () => {
   //it will update category array accordingly
   const getAllCategory = async () => {
     try {
+      setLoading(true);
       const { data } = await axios.get(
         `${process.env.REACT_APP_API_ENDPOINT}/api/v1/category/get-category`
       );
@@ -45,6 +48,8 @@ const CreateCategory = () => {
     } catch (error) {
       console.log(error);
       toast.error("something went wrong in getting category");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -102,64 +107,76 @@ const CreateCategory = () => {
           </div>
           <div className="col-md-9">
             <h1>Manage category</h1>
-            <div className="p-3 w-50">
-              <CategoryForm
-                handleSubmit={handleSubmit}
-                value={name}
-                setValue={setName}
-              />
-            </div>
-            <div className="w-75">
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th scope="col">Name</th>
-                    <th scope="col">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {categories?.map((c) => (
-                    <>
-                      <tr>
-                        <td key={c._id}>{c.name}</td>
-
-                        <td>
-                          <button
-                            className="btn btn-primary ms-2"
-                            onClick={() => {
-                              setVisible(true);
-                              setUpdatedName(c.name);
-                              setSelected(c);
-                            }}
-                          >
-                            Edit
-                          </button>
-                          <button
-                            className="btn btn-danger ms-2"
-                            onClick={() => {
-                              handleDelete(c._id);
-                            }}
-                          >
-                            Delete
-                          </button>
-                        </td>
-                      </tr>
-                    </>
+            {loading ? (
+              <div className="p-3 w-50">
+                <Skeleton.Input active block style={{ height: 38 }} />
+                <div className="mt-4 w-75">
+                  {[...Array(5)].map((_, i) => (
+                    <div key={i} className="mb-2">
+                      <Skeleton active title={false} paragraph={{ rows: 1 }} />
+                    </div>
                   ))}
-                </tbody>
-              </table>
-              <Modal
-                onCancel={() => setVisible(false)}
-                footer={null}
-                visible={visible}
-              >
-                <CategoryForm
-                  value={updatedName}
-                  setValue={setUpdatedName}
-                  handleSubmit={handleUpdate}
-                />
-              </Modal>
-            </div>
+                </div>
+              </div>
+            ) : (
+              <>
+                <div className="p-3 w-50">
+                  <CategoryForm
+                    handleSubmit={handleSubmit}
+                    value={name}
+                    setValue={setName}
+                  />
+                </div>
+                <div className="w-75">
+                  <table className="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {categories?.map((c) => (
+                        <tr key={c._id}>
+                          <td>{c.name}</td>
+                          <td>
+                            <button
+                              className="btn btn-primary ms-2"
+                              onClick={() => {
+                                setVisible(true);
+                                setUpdatedName(c.name);
+                                setSelected(c);
+                              }}
+                            >
+                              Edit
+                            </button>
+                            <button
+                              className="btn btn-danger ms-2"
+                              onClick={() => {
+                                handleDelete(c._id);
+                              }}
+                            >
+                              Delete
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  <Modal
+                    onCancel={() => setVisible(false)}
+                    footer={null}
+                    visible={visible}
+                  >
+                    <CategoryForm
+                      value={updatedName}
+                      setValue={setUpdatedName}
+                      handleSubmit={handleUpdate}
+                    />
+                  </Modal>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

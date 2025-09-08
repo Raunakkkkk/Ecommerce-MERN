@@ -63,23 +63,34 @@ export const createProductController = async (req, res) => {
 //get all products
 export const getProductController = async (req, res) => {
   try {
+    const { page = 1, limit = 10 } = req.query;
+    const skip = (page - 1) * limit;
+
+    // Get total count
+    const total = await productModel.countDocuments({});
+
+    // Get paginated products
     const products = await productModel
       .find({})
       .populate("category")
       .select("-photo")
-      .limit(12)
+      .limit(parseInt(limit))
+      .skip(skip)
       .sort({ createdAt: -1 });
+
     res.status(200).send({
       success: true,
-      counTotal: products.length,
-      message: "ALlProducts ",
-      products,
+      total: total,
+      products: products,
+      currentPage: parseInt(page),
+      totalPages: Math.ceil(total / limit),
+      message: "All Products",
     });
   } catch (error) {
     console.log(error);
     res.status(500).send({
       success: false,
-      message: "Erorr in getting products",
+      message: "Error in getting products",
       error: error.message,
     });
   }
@@ -112,6 +123,8 @@ export const productPhotoController = async (req, res) => {
     const product = await productModel.findById(req.params.pid).select("photo");
     if (product.photo.data) {
       res.set("Content-type", product.photo.contentType);
+      // Cache for 10 days (864000 seconds)
+      res.set("Cache-Control", "public, max-age=864000, immutable");
       return res.status(200).send(product.photo.data);
     }
   } catch (error) {
@@ -199,21 +212,37 @@ export const updateProductController = async (req, res) => {
 //filters
 export const productFiltersController = async (req, res) => {
   try {
-    const { checked, radio } = req.body; //ye frontend se ara
+    const { checked, radio, page = 1, limit = 10 } = req.body;
+    const skip = (page - 1) * limit;
+
     let args = {};
     if (checked.length > 0) args.category = checked;
-    //$gte is a query in mongodb
     if (radio.length) args.price = { $gte: radio[0], $lte: radio[1] };
-    const products = await productModel.find(args); //query  hejdi db mai
+
+    // Get total count for filtered results
+    const total = await productModel.countDocuments(args);
+
+    // Get paginated filtered products
+    const products = await productModel
+      .find(args)
+      .populate("category")
+      .select("-photo")
+      .limit(parseInt(limit))
+      .skip(skip)
+      .sort({ createdAt: -1 });
+
     res.status(200).send({
       success: true,
-      products,
+      total: total,
+      products: products,
+      currentPage: parseInt(page),
+      totalPages: Math.ceil(total / limit),
     });
   } catch (error) {
     console.log(error);
     res.status(400).send({
       success: false,
-      message: "Error WHile Filtering Products",
+      message: "Error While Filtering Products",
       error,
     });
   }

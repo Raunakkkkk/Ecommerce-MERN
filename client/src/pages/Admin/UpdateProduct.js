@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Skeleton } from "antd";
 
 import toast from "react-hot-toast";
 import axios from "axios";
@@ -12,6 +13,7 @@ const UpdateProduct = () => {
   const navigate = useNavigate();
   const params = useParams();
   const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -24,6 +26,7 @@ const UpdateProduct = () => {
   //get single product
   const getSingleProduct = async () => {
     try {
+      setLoading(true);
       const { data } = await axios.get(
         `${process.env.REACT_APP_API_ENDPOINT}/api/v1/product/get-product/${params.slug}`
       );
@@ -37,6 +40,8 @@ const UpdateProduct = () => {
     } catch (error) {
       console.log(error);
       toast.error("Error loading product details");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -119,125 +124,131 @@ const UpdateProduct = () => {
           </div>
           <div className="col-md-9">
             <h1>Update Product</h1>
-            <div className="m-1 w-75">
-              <h4>Category</h4>
-              <Select
-                bordered={false}
-                placeholder="Select a category"
-                size="large"
-                showSearch
-                className="form-select mb-3"
-                onChange={(value) => {
-                  setCategory(value);
-                }}
-                value={category}
-              >
-                {categories?.map((c) => (
-                  <Option key={c._id} value={c._id}>
-                    {c.name}
-                  </Option>
-                ))}
-              </Select>
-              <div className="mb-3">
-                <label className="btn btn-outline-secondary col-md-12">
-                  {photo ? photo.name : "Upload Photo"}
-                  <input
-                    type="file"
-                    name="photo"
-                    accept="image/*"
-                    onChange={(e) => setPhoto(e.target.files[0])}
-                    hidden
-                  />
-                </label>
+            {loading ? (
+              <div className="m-1 w-75">
+                <Skeleton active paragraph={{ rows: 10 }} />
               </div>
-              <div className="mb-3">
-                {photo ? (
-                  <div className="text-center">
-                    <img
-                      src={URL.createObjectURL(photo)}
-                      alt="product_photo"
-                      height={"200px"}
-                      className="img img-responsive"
-                    />
-                  </div>
-                ) : (
-                  <div className="text-center">
-                    <img
-                      src={`${process.env.REACT_APP_API_ENDPOINT}/api/v1/product/product-photo/${id}`}
-                      alt="product_photo"
-                      height={"200px"}
-                      className="img img-responsive"
-                    />
-                  </div>
-                )}
-              </div>
-              <h4>Product Name</h4>
-              <div className="mb-3">
-                <input
-                  type="text"
-                  value={name}
-                  placeholder="write a name"
-                  className="form-control"
-                  onChange={(e) => setName(e.target.value)}
-                />
-              </div>
-              <h4>Product Description</h4>
-              <div className="mb-3">
-                <textarea
-                  type="text"
-                  value={description}
-                  placeholder="write a description"
-                  className="form-control"
-                  onChange={(e) => setDescription(e.target.value)}
-                />
-              </div>
-              <h4>Price</h4>
-              <div className="mb-3">
-                <input
-                  type="number"
-                  value={price}
-                  placeholder="write a Price"
-                  className="form-control"
-                  onChange={(e) => setPrice(e.target.value)}
-                />
-              </div>
-              <h4>Quantity Available</h4>
-              <div className="mb-3">
-                <input
-                  type="number"
-                  value={quantity}
-                  placeholder="write a quantity"
-                  className="form-control"
-                  onChange={(e) => setQuantity(e.target.value)}
-                />
-              </div>
-              <h4>Shippable</h4>
-              <div className="mb-3">
+            ) : (
+              <div className="m-1 w-75">
+                <h4>Category</h4>
                 <Select
                   bordered={false}
-                  placeholder="Select Shipping"
+                  placeholder="Select a category"
                   size="large"
+                  showSearch
                   className="form-select mb-3"
                   onChange={(value) => {
-                    setShipping(value === "1");
+                    setCategory(value);
                   }}
-                  value={shipping ? "1" : "0"}
+                  value={category}
                 >
-                  <Option value="0">No</Option>
-                  <Option value="1">Yes</Option>
+                  {categories?.map((c) => (
+                    <Option key={c._id} value={c._id}>
+                      {c.name}
+                    </Option>
+                  ))}
                 </Select>
+                <div className="mb-3">
+                  <label className="btn btn-outline-secondary col-md-12">
+                    {photo ? photo.name : "Upload Photo"}
+                    <input
+                      type="file"
+                      name="photo"
+                      accept="image/*"
+                      onChange={(e) => setPhoto(e.target.files[0])}
+                      hidden
+                    />
+                  </label>
+                </div>
+                <div className="mb-3">
+                  {photo ? (
+                    <div className="text-center">
+                      <img
+                        src={URL.createObjectURL(photo)}
+                        alt="product_photo"
+                        height={"200px"}
+                        className="img img-responsive"
+                      />
+                    </div>
+                  ) : (
+                    <div className="text-center">
+                      <img
+                        src={`${process.env.REACT_APP_API_ENDPOINT}/api/v1/product/product-photo/${id}`}
+                        alt="product_photo"
+                        height={"200px"}
+                        className="img img-responsive"
+                      />
+                    </div>
+                  )}
+                </div>
+                <h4>Product Name</h4>
+                <div className="mb-3">
+                  <input
+                    type="text"
+                    value={name}
+                    placeholder="write a name"
+                    className="form-control"
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                </div>
+                <h4>Product Description</h4>
+                <div className="mb-3">
+                  <textarea
+                    type="text"
+                    value={description}
+                    placeholder="write a description"
+                    className="form-control"
+                    onChange={(e) => setDescription(e.target.value)}
+                  />
+                </div>
+                <h4>Price</h4>
+                <div className="mb-3">
+                  <input
+                    type="number"
+                    value={price}
+                    placeholder="write a Price"
+                    className="form-control"
+                    onChange={(e) => setPrice(e.target.value)}
+                  />
+                </div>
+                <h4>Quantity Available</h4>
+                <div className="mb-3">
+                  <input
+                    type="number"
+                    value={quantity}
+                    placeholder="write a quantity"
+                    className="form-control"
+                    onChange={(e) => setQuantity(e.target.value)}
+                  />
+                </div>
+                <h4>Shippable</h4>
+                <div className="mb-3">
+                  <Select
+                    bordered={false}
+                    placeholder="Select Shipping"
+                    size="large"
+                    className="form-select mb-3"
+                    onChange={(value) => {
+                      setShipping(value === "1");
+                    }}
+                    value={shipping ? "1" : "0"}
+                  >
+                    <Option value="0">No</Option>
+                    <Option value="1">Yes</Option>
+                  </Select>
+                </div>
+                <div className="mb-3">
+                  <button className="btn btn-primary" onClick={handleUpdate}>
+                    UPDATE PRODUCT
+                  </button>
+                </div>
+                <div className="mb-3">
+                  <button className="btn btn-danger" onClick={handleDelete}>
+                    DELETE PRODUCT
+                  </button>
+                </div>
               </div>
-              <div className="mb-3">
-                <button className="btn btn-primary" onClick={handleUpdate}>
-                  UPDATE PRODUCT
-                </button>
-              </div>
-              <div className="mb-3">
-                <button className="btn btn-danger" onClick={handleDelete}>
-                  DELETE PRODUCT
-                </button>
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </div>

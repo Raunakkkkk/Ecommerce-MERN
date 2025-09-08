@@ -31,8 +31,9 @@ body {
   font-size: 17px;
   line-height: 26px;
   text-transform: uppercase;
-  box-shadow: 0 8px 6px -6px gray;
-  border-bottom: solid gray !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid #e9ecef !important;
+  background-color: #ffffff !important;
 }
 
 .nav-link {
@@ -44,11 +45,15 @@ body {
 .nav-link:hover {
   text-decoration: none !important;
   border-bottom: none !important;
+  background-color: #f8f9fa !important;
+  color: #495057 !important;
 }
 
 .active {
-  border-bottom: 2px solid black !important;
+  background-color: #e9ecef !important;
+  color: #495057 !important;
   text-decoration: none !important;
+  border-radius: 6px !important;
 }
 
 .navbar-brand {
@@ -84,11 +89,242 @@ body {
 .dropdown-item {
   text-decoration: none !important;
   border-bottom: none !important;
+  transition: all 0.3s ease;
 }
 
 .dropdown-item:hover {
   text-decoration: none !important;
   border-bottom: none !important;
+  background-color: #f8f9fa !important;
+  color: #495057 !important;
+}
+
+/* Clean white theme enhancements */
+.navbar-brand:hover {
+  color: #495057 !important;
+  text-decoration: none !important;
+}
+
+/* Dropdown menu styling */
+.dropdown-menu {
+  border: 1px solid #e9ecef !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+  border-radius: 8px !important;
+}
+
+/* Cart badge styling */
+.ant-badge {
+  color: #495057 !important;
+}
+
+.ant-badge-count {
+  background-color: #6c757d !important;
+  color: white !important;
+  font-size: 12px !important;
+}
+
+/* Responsive icon sizing */
+@media (max-width: 992px) {
+  .navbar-nav .nav-link i {
+    font-size: 14px !important;
+  }
+
+  .navbar-brand {
+    font-size: 1.5rem !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar-nav .nav-link i {
+    font-size: 12px !important;
+  }
+
+  .navbar-brand {
+    font-size: 1.25rem !important;
+  }
+
+  .navbar-nav .nav-link {
+    padding: 8px 12px !important;
+    font-size: 14px !important;
+  }
+
+  /* Ensure navbar container doesn't interfere with mobile menu */
+  .navbar .container-fluid {
+    position: relative !important;
+  }
+
+  /* Style the mobile search button */
+  .mobile-search-btn {
+    border: none !important;
+    padding: 0.25rem 0.5rem !important;
+    transition: all 0.3s ease !important;
+    background: transparent !important;
+  }
+
+  .mobile-search-btn:hover {
+    background-color: #f8f9fa !important;
+    border-radius: 4px !important;
+  }
+
+  .mobile-search-btn:focus {
+    box-shadow: none !important;
+  }
+
+  .mobile-search-btn i {
+    font-size: 16px !important;
+  }
+
+  /* Style the hamburger button */
+  .navbar-toggler {
+    border: none !important;
+    padding: 0.25rem 0.5rem !important;
+    transition: all 0.3s ease !important;
+  }
+
+  .navbar-toggler:focus {
+    box-shadow: none !important;
+  }
+
+  .navbar-toggler:hover {
+    background-color: #f8f9fa !important;
+    border-radius: 4px !important;
+  }
+
+  /* Active state for hamburger button when menu is open */
+  .navbar-toggler[aria-expanded="true"] {
+    background-color: #e9ecef !important;
+    border-radius: 4px !important;
+    transform: rotate(90deg) !important;
+  }
+
+  .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%2833, 37, 41, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+    transition: all 0.3s ease !important;
+  }
+
+  /* Change hamburger icon to X when active */
+  .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%2833, 37, 41, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M6 6l18 18M6 24L24 6'/%3e%3c/svg%3e") !important;
+  }
+
+  /* Fix mobile menu alignment - left align the hamburger menu */
+  .navbar-collapse {
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+    background-color: white !important;
+    border: 1px solid #e9ecef !important;
+    border-top: none !important;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15) !important;
+    z-index: 1000 !important;
+    text-align: left !important;
+    padding: 1.5rem 1rem !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transform: translateY(-10px) !important;
+    transition: all 0.3s ease !important;
+    border-radius: 0 0 12px 12px !important;
+  }
+
+  /* Active state for mobile menu when open */
+  .navbar-collapse.show {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+  }
+
+  .navbar-collapse .navbar-nav {
+    text-align: left !important;
+    justify-content: flex-start !important;
+    align-items: flex-start !important;
+    width: 100%;
+    flex-direction: column !important;
+  }
+
+  .navbar-collapse .navbar-nav .nav-item {
+    margin-right: 0 !important;
+    margin-bottom: 0.5rem;
+    width: 100%;
+    text-align: left !important;
+  }
+
+  .navbar-collapse .navbar-nav .nav-link {
+    text-align: left !important;
+    justify-content: flex-start !important;
+    width: 100%;
+    display: flex !important;
+    align-items: center !important;
+    transition: all 0.3s ease !important;
+    border-radius: 6px !important;
+    margin: 0.25rem 0 !important;
+  }
+
+  .navbar-collapse .navbar-nav .nav-link:hover {
+    background-color: #f8f9fa !important;
+    transform: scale(1.02) !important;
+  }
+
+  .navbar-collapse .navbar-nav .nav-link.active {
+    background-color: #e9ecef !important;
+    color: #495057 !important;
+    font-weight: 500 !important;
+  }
+
+  /* Override any centering from parent containers */
+  .navbar-collapse .d-flex {
+    justify-content: flex-start !important;
+  }
+
+  /* Mobile search container styling - Flowbite inspired */
+  .mobile-search-container {
+    width: 100% !important;
+    padding: 1rem 0 !important;
+    margin-bottom: 1rem !important;
+    background-color: #f8f9fa !important;
+    border-radius: 8px !important;
+    padding: 1rem !important;
+  }
+
+  .mobile-search-container .form-control {
+    border-radius: 8px !important;
+    border: 1px solid #e9ecef !important;
+    padding: 0.75rem 1rem !important;
+    font-size: 14px !important;
+    background-color: white !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+    transition: all 0.3s ease !important;
+  }
+
+  .mobile-search-container .form-control:focus {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+    outline: none !important;
+  }
+
+  .mobile-search-container .form-control::placeholder {
+    color: #6c757d !important;
+    font-size: 14px !important;
+  }
+
+  /* Search input with icon styling */
+  .mobile-search-container .input-group {
+    position: relative !important;
+  }
+
+  .mobile-search-container .input-group-text {
+    background-color: transparent !important;
+    border: none !important;
+    color: #6c757d !important;
+    padding-left: 1rem !important;
+  }
+
+  /* Ensure cart text styling matches other nav items */
+  .navbar-collapse .navbar-nav .nav-link span {
+    font-weight: inherit !important;
+    color: inherit !important;
+    font-size: inherit !important;
+  }
 }
 
 /* Footer Styles */
